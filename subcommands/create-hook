@@ -2,7 +2,7 @@
 set -eo pipefail
 [[ $DOKKU_TRACE ]] && set -x
 
-create-hook() {
+createHook() {
 	declare desc="Creates a new webhook and adds it to http server and github"
 	declare cmd="create-hook"
 
@@ -17,4 +17,4 @@ create-hook() {
 	echo WEBHOOK
 }
 
-create-hook "$@"
+createHook "$@"
