@@ -1,0 +1,4 @@
+[plugin]
+description = "dokku deploys based on external webhooks"
+version = "0.1.0"
+[plugin.config]
