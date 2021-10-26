@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -eo pipefail
+[[ $DOKKU_TRACE ]] && set -x
+
+create-hook() {
+	declare desc="Creates a new webhook and adds it to http server and github"
+	declare cmd="create-hook"
+
+	[[ "$1" == "$cmd" ]] && shift 1
+	# Support --app/$WEBHOOK_NAME flag
+	# Use the following lines to reorder args into "$cmd $WEBHOOK_NAME $@""
+	[[ -n $WEBHOOK_NAME ]] && set -- $WEBHOOK_NAME $@
+	set -- $cmd $@
+
+	declare WEBHOOK=$1
+
+	echo WEBHOOK
+}
+
+create-hook "$@"

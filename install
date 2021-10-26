@@ -1,3 +1,21 @@
 #!/usr/bin/env bash
 
-echo "installed dokku webhook deploy plugin"
+func installGo() {
+	wget https://dl.google.com/go/go1.17.2.linux-amd64.tar.gz
+	tar -xvzf go1.17.2.linux-amd64.tar.gz
+	sudo mv go /usr/local
+	export PATH=/usr/local/go/bin
+}
+
+# Install golang binaries if it doesn't exist
+installGo
+if ! command -v "go" &>/dev/null; then
+	echo "No golang binaries found, installing it now"
+	installGo
+	echo "Successfully installed golang binaries"
+fi
+
+# Create all storage files
+touch "hooks"
+touch "repos"
+touch "links"
