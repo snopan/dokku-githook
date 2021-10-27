@@ -14,7 +14,7 @@ createHook() {
 
 	declare WEBHOOK=$1
 
-	echo WEBHOOK
+	echo "$WEBHOOK"
 }
 
 createHook "$@"
