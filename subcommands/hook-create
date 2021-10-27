@@ -4,7 +4,7 @@ set -eo pipefail
 
 createHook() {
 	declare desc="Creates a new webhook and adds it to http server and github"
-	declare cmd="git-hook:create-hook"
+	declare cmd="githook:hook-create"
 
 	# Moves the input down by one so $1 will be the parameters after $cmd
 	[[ "$1" == "$cmd" ]] && shift 1
