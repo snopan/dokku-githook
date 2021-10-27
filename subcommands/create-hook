@@ -12,7 +12,7 @@ createHook() {
 	[[ -n $WEBHOOK_NAME ]] && set -- $WEBHOOK_NAME $@
 	set -- $cmd $@
 
-	declare WEBHOOK=$2
+	declare WEBHOOK=$0
 
 	echo "$WEBHOOK"
 }
