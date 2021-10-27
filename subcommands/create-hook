@@ -6,18 +6,15 @@ createHook() {
 	declare desc="Creates a new webhook and adds it to http server and github"
 	declare cmd="create-hook"
 
+	# Moves the input down by one so $1 will be the parameters after $cmd
 	[[ "$1" == "$cmd" ]] && shift 1
-	# Support --app/$WEBHOOK_NAME flag
-	# Use the following lines to reorder args into "$cmd $WEBHOOK_NAME $@""
-	[[ -n $WEBHOOK_NAME ]] && set -- $WEBHOOK_NAME $@
-	set -- $cmd $@
 
-	echo "in function"
-	echo "$1"
-	echo "$2"
-	declare WEBHOOK=$2
+	# The command format is $cmd $webhook $repository
+	declare webhook=$1
+	declare repository=$2
 
-	echo "$WEBHOOK"
+	echo "$webhook"
+	echo "$repository"
 }
 
 echo "$@"
