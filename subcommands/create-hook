@@ -17,4 +17,5 @@ createHook() {
 	echo "$WEBHOOK"
 }
 
+echo "$@"
 createHook "$@"
