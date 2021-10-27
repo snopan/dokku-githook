@@ -13,14 +13,10 @@ createHook() {
 	declare webhook=$1
 	declare repository=$2
 
+	echo "$1"
+	echo "$2"
 	echo "$webhook"
 	echo "$repository"
 }
 
-echo "$@"
-echo "$1"
-echo "$2"
-echo "$3"
-echo "$4"
-echo "$0"
 createHook "$@"
