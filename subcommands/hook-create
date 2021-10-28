@@ -17,11 +17,19 @@ createHook() {
 	if canAddHook "$webhook"
 	then
 		addHook "$webhook"
+		createGithubHook $webhook $repository
 	else
-		echo "failed"
+		echo "err: given hook already exist"
 	fi
+}
 
-	cat "$PLUGIN_AVAILABLE_PATH/githook/data/hooks"
+createGithubHook() {
+	declare webhook=$1
+	declare repository=$2
+
+	curl -d "{'url': 'http://${curl ifconfig.me}:9000/$webhook' \
+			'token': '$GITHUB_TOKEN'}" \
+			"https://api.github.com/repos/$GITHUB_USERNAME/$repository/hooks"
 }
 
 createHook "$@"
