@@ -10,7 +10,7 @@ addHook() {
 
 canAddHook() {
 	while read hook; do
-		echo "$p"
+		echo "$hook"
 	done < "$HOOK_DATA_PATH"
 }
 
