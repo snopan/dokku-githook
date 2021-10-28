@@ -3,15 +3,15 @@
 declare HOOK_DATA_PATH="$PLUGIN_AVAILABLE_PATH/githook/data/hooks"
 
 addHook() {
-	declare hook=$1
-	echo "$hook" >> "$HOOK_DATA_PATH"
-	canAddHook
+	echo "$1" >> "$HOOK_DATA_PATH"
+	echo canAddHook "$1"
 }
 
 canAddHook() {
 	while read hook; do
-		echo "$hook"
+		[[ "$1" == "$hook" ]] && return false
 	done < "$HOOK_DATA_PATH"
+	return true
 }
 
 removeHook() {
