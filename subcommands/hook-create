@@ -14,7 +14,13 @@ createHook() {
 	declare repository=$2
 
 	source "$PLUGIN_AVAILABLE_PATH/githook/data-operations/hooks"
-	addHook "$webhook"
+	if canAddHook "$webhook"
+	then
+		addHook "$webhook"
+	else
+		echo "failed"
+
+	cat "$PLUGIN_AVAILABLE_PATH/githook/data/hooks"
 }
 
 createHook "$@"
