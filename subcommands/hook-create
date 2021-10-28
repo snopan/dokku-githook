@@ -28,7 +28,7 @@ createGithubHook() {
 	declare repository=$2
 	declare ip=$(curl "ifconfig.me")
 
-	echo "https://api.github.com/repos/$GITHUB_USERNAME/$repository/hooks"
+	echo "https://api.github.com/repos/$repository/hooks"
 	curl \
 	-i \
 	-u "$GITHUB_USERNAME:$GITHUB_TOKEN" \
