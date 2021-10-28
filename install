@@ -10,6 +10,6 @@ installGo() {
 
 # Create all storage files
 mkdir "$PLUGIN_AVAILABLE_PATH/githook/data"
-echo > "$PLUGIN_AVAILABLE_PATH/githook/data/hooks"
-echo > "$PLUGIN_AVAILABLE_PATH/githook/data/repos"
-echo > "$PLUGIN_AVAILABLE_PATH/githook/data/links"
+echo -n > "$PLUGIN_AVAILABLE_PATH/githook/data/hooks"
+echo -n > "$PLUGIN_AVAILABLE_PATH/githook/data/repos"
+echo -n > "$PLUGIN_AVAILABLE_PATH/githook/data/links"
