@@ -28,9 +28,10 @@ createGithubHook() {
 	declare repository=$2
 	declare ip=$(curl "ifconfig.me")
 
-	curl -d "{'url': 'http://$ip:9000/$webhook' \
-			'token': '$GITHUB_TOKEN'}" \
-			"https://api.github.com/repos/$GITHUB_USERNAME/$repository/hooks"
+	curl -X POST \ 
+		-d "{'url': 'http://$ip:9000/$webhook' \
+		'token': '$GITHUB_TOKEN'}" \
+		"https://api.github.com/repos/$GITHUB_USERNAME/$repository/hooks"
 }
 
 createHook "$@"
