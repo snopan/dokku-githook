@@ -3,7 +3,7 @@
 declare HOOK_DATA_PATH="$PLUGIN_AVAILABLE_PATH/githook/data/hooks"
 
 addHook() {
-	cat HOOK_DATA_PATH
+	ls -l HOOK_DATA_PATH
 	declare hook=$1
 	echo "$hook" > HOOK_DATA_PATH
 	canAddHook
