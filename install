@@ -8,11 +8,8 @@ installGo() {
 # Install golang binaries if it doesn't exist
 # installGo
 
-# Export the plugin directory as an environment variable
-export CURR_PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/githook"
-
 # Create all storage files
-mkdir "$CURR_PLUGIN_PATH/data"
-echo > "$CURR_PLUGIN_PATH/data/hooks"
-echo > "$CURR_PLUGIN_PATH/data/repos"
-echo > "$CURR_PLUGIN_PATH/data/links"
+mkdir "$PLUGIN_AVAILABLE_PATH/githook/data"
+echo > "$PLUGIN_AVAILABLE_PATH/githook/data/hooks"
+echo > "$PLUGIN_AVAILABLE_PATH/githook/data/repos"
+echo > "$PLUGIN_AVAILABLE_PATH/githook/data/links"
