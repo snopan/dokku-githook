@@ -9,6 +9,6 @@ installGo() {
 # installGo
 
 # Create all storage files
-echo > hooks
-echo > repos
-echo > links
+echo > data/hooks
+echo > data/repos
+echo > data/links

@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+declare HOOK_DATA_PATH=$PLUGIN_CORE_AVAILABLE_PATH/data/hook
+
+addHook() {
+	declare hook = $1
+	echo "$hook" > HOOK_DATA_PATH
+}
+
+canAddHook() {
+	while read hook; do
+		echo "$p"
+	done < HOOK_DATA_PATH
+}
+
+removeHook() {
+
+}
