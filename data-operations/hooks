@@ -15,5 +15,5 @@ canAddHook() {
 }
 
 removeHook() {
-
+	echo "removed"
 }
