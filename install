@@ -14,3 +14,8 @@ mkdir "$PLUGIN_PATH/data"
 echo > "$PLUGIN_PATH/data/hooks"
 echo > "$PLUGIN_PATH/data/repos"
 echo > "$PLUGIN_PATH/data/links"
+
+# Allow read and write for these storage files
+chmod +rw "$PLUGIN_PATH/data/hooks"
+chmod +rw "$PLUGIN_PATH/data/repos"
+chmod +rw "$PLUGIN_PATH/data/links"
