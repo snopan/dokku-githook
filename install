@@ -8,14 +8,11 @@ installGo() {
 # Install golang binaries if it doesn't exist
 # installGo
 
+# Export the plugin directory as an environment variable
+export PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/githook"
+
 # Create all storage files
-declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/githook"
 mkdir "$PLUGIN_PATH/data"
 echo > "$PLUGIN_PATH/data/hooks"
 echo > "$PLUGIN_PATH/data/repos"
 echo > "$PLUGIN_PATH/data/links"
-
-# Allow read and write for these storage files
-chmod +rw "$PLUGIN_PATH/data/hooks"
-chmod +rw "$PLUGIN_PATH/data/repos"
-chmod +rw "$PLUGIN_PATH/data/links"
