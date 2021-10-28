@@ -9,6 +9,7 @@ installGo() {
 # installGo
 
 # Create all storage files
-echo > $PLUGIN_CORE_AVAILABLE_PATH/data/hooks
-echo > $PLUGIN_CORE_AVAILABLE_PATH/data/repos
-echo > $PLUGIN_CORE_AVAILABLE_PATH/data/links
+mkdir "$PLUGIN_CORE_AVAILABLE_PATH/data"
+echo > "$PLUGIN_CORE_AVAILABLE_PATH/data/hooks"
+echo > "$PLUGIN_CORE_AVAILABLE_PATH/data/repos"
+echo > "$PLUGIN_CORE_AVAILABLE_PATH/data/links"
