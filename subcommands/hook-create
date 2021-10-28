@@ -13,6 +13,7 @@ createHook() {
 	declare webhook=$1
 	declare repository=$2
 
+	printenv
 	source "$CURR_PLUGIN_PATH/data-operations/hooks"
 	addHook webhook
 }
