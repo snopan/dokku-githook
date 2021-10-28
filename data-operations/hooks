@@ -8,9 +8,9 @@ addHook() {
 
 canAddHook() {
 	while read hook; do
-		[[ "$1" == "$hook" ]] && return false
+		[[ "$1" == "$hook" ]] && return 1
 	done < "$HOOK_DATA_PATH"
-	return true
+	return 0
 }
 
 removeHook() {
