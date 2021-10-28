@@ -29,12 +29,13 @@ createGithubHook() {
 	declare ip=$(curl "ifconfig.me")
 
 	echo "https://api.github.com/repos/$GITHUB_USERNAME/$repository/hooks"
-	curl -X POST \
+	curl \
+	-u "$GITHUB_USERNAME:$GITHUB_TOKEN" \
 	-H "Accept: application/vnd.github.v3+json" \
 	"https://api.github.com/repos/$GITHUB_USERNAME/$repository/hooks" \
 	-d "{\
 	'name': 'web',
-	'config': { url': 'http://$ip:9000/$webhook', 'token': '$GITHUB_TOKEN'}\
+	'config': {url': 'http://$ip:9000/$webhook', 'insecure_ssl': '1'}\
 	}"
 }
 
