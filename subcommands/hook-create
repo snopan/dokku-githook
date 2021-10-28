@@ -19,6 +19,7 @@ createHook() {
 		addHook "$webhook"
 	else
 		echo "failed"
+	fi
 
 	cat "$PLUGIN_AVAILABLE_PATH/githook/data/hooks"
 }
