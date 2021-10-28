@@ -11,7 +11,7 @@ addHook() {
 canAddHook() {
 	while read hook; do
 		echo "$p"
-	done < HOOK_DATA_PATH
+	done < "$HOOK_DATA_PATH"
 }
 
 removeHook() {
