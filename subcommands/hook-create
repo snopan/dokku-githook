@@ -26,9 +26,8 @@ createHook() {
 createGithubHook() {
 	declare webhook=$1
 	declare repository=$2
-	declare ip=curl "ifconfig.me"
 
-	curl -d "{'url': 'http://$ip:9000/$webhook' \
+	curl -d "{'url': 'http://${curl "ifconfig.me"}:9000/$webhook' \
 			'token': '$GITHUB_TOKEN'}" \
 			"https://api.github.com/repos/$GITHUB_USERNAME/$repository/hooks"
 }
