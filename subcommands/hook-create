@@ -29,6 +29,7 @@ createGithubHook() {
 	declare ip=$(curl "ifconfig.me")
 
 	echo "https://api.github.com/repos/$repository/hooks"
+	echo "{'name': 'web','config': {'url': 'http://$ip:9000/$webhook', 'insecure_ssl': '1'}}"
 	curl \
 	-i \
 	-u "$GITHUB_USERNAME:$GITHUB_TOKEN" \
