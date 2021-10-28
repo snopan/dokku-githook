@@ -30,6 +30,7 @@ createGithubHook() {
 
 	echo "https://api.github.com/repos/$GITHUB_USERNAME/$repository/hooks"
 	curl \
+	-i \
 	-u "$GITHUB_USERNAME:$GITHUB_TOKEN" \
 	-H "Accept: application/vnd.github.v3+json" \
 	"https://api.github.com/repos/$GITHUB_USERNAME/$repository/hooks" \
