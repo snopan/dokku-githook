@@ -29,7 +29,10 @@ createGithubHook() {
 	declare ip=$(curl "ifconfig.me")
 
 	echo "https://api.github.com/repos/$GITHUB_USERNAME/$repository/hooks"
-	curl -X POST -H "Accept: application/vnd.github.v3+json" "https://api.github.com/repos/$GITHUB_USERNAME/$repository/hooks" -d "{'url': 'http://$ip:9000/$webhook', 'token': '$GITHUB_TOKEN'}"
+	curl -X POST \
+	-H "Accept: application/vnd.github.v3+json" \
+	"https://api.github.com/repos/$GITHUB_USERNAME/$repository/hooks" \
+	-d "{'url': 'http://$ip:9000/$webhook', 'token': '$GITHUB_TOKEN'}"
 }
 
 createHook "$@"
