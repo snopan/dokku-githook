@@ -19,7 +19,7 @@ createHook() {
 	if canAddHook "$webhook"
 	then
 		addHook "$webhook"
-		echo $(createGithubHook $webhook $repository)
+		createGithubHook $webhook $repository
 	else
 		echo "err: given hook already exist"
 	fi
@@ -30,7 +30,7 @@ createGithubHook() {
 	declare repository=$2
 	declare ip=$(curl "ifconfig.me")
 
-	return $(curl \
+	echo $(curl \
 	-s \
 	-w '%{http_code}'\
 	-u "$GITHUB_USERNAME:$GITHUB_TOKEN" \
