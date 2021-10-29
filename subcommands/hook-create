@@ -18,12 +18,13 @@ createHook() {
 	source "$PLUGIN_PATH/data-operations/hooks"
 	if canAddHook "$webhook"
 	then
-		addHook "$webhook"
 		if createGithubHook $webhook $repository
 		then
-			echo 'sent'
+			addHook "$webhook"
+			echo "Successfully added $webhook as a webhook"
 		else
-			echo 'not sent'
+			echo "err: unable to create webhook on github, \
+			usually it's because hook already exist"
 		fi
 	else
 		echo "err: given hook already exist"
