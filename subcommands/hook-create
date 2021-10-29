@@ -23,8 +23,7 @@ createHook() {
 			addHook "$webhook"
 			echo "Successfully added $webhook as a webhook"
 		else
-			echo "err: unable to create webhook on github, \
-			usually it's because hook already exist"
+			echo "err: unable to create webhook on github, usually it's because hook already exist"
 		fi
 	else
 		echo "err: given hook already exist"
