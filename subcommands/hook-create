@@ -2,6 +2,8 @@
 set -eo pipefail
 [[ $DOKKU_TRACE ]] && set -x
 
+declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/githook"
+
 createHook() {
 	declare desc="Creates a new webhook and adds it to http server and github"
 	declare cmd="githook:hook-create"
@@ -13,7 +15,7 @@ createHook() {
 	declare webhook=$1
 	declare repository=$2
 
-	source "$PLUGIN_AVAILABLE_PATH/githook/data-operations/hooks"
+	source "$PLUGIN_PATH/data-operations/hooks"
 	if canAddHook "$webhook"
 	then
 		addHook "$webhook"
@@ -28,10 +30,8 @@ createGithubHook() {
 	declare repository=$2
 	declare ip=$(curl "ifconfig.me")
 
-	echo "https://api.github.com/repos/$repository/hooks"
-	echo "{'name': 'web','config': {'url': 'http://$ip:9000/$webhook', 'insecure_ssl': '1'}}"
 	curl \
-	-i \
+	-s \
 	-u "$GITHUB_USERNAME:$GITHUB_TOKEN" \
 	-H "Accept: application/vnd.github.v3+json" \
 	"https://api.github.com/repos/$repository/hooks" \

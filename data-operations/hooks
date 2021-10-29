@@ -1,15 +1,17 @@
 #!/usr/bin/env bash
 
-declare HOOK_DATA_PATH="$PLUGIN_AVAILABLE_PATH/githook/data/hooks"
+declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/githook"
 
 addHook() {
-	echo "$1" >> "$HOOK_DATA_PATH"
+	declare webhook=$1
+	echo "$webhook " >> "$PLUGIN_PATH/data/hooks"
 }
 
 canAddHook() {
+	declare webhook=$1
 	while read hook; do
-		[[ "$1" == "$hook" ]] && return 1
-	done < "$HOOK_DATA_PATH"
+		[[ "$webhook" == "$hook" ]] && return 1
+	done < "$PLUGIN_PATH/data/hooks"
 	return 0
 }
 
