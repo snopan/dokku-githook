@@ -30,7 +30,7 @@ createGithubHook() {
 	declare repository=$2
 	declare ip=$(curl "ifconfig.me")
 
-	return $(url \
+	return $(curl \
 	-s \
 	-w '%{http_code}'\
 	-u "$GITHUB_USERNAME:$GITHUB_TOKEN" \
