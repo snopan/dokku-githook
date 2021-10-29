@@ -36,7 +36,7 @@ createGithubHook() {
 	declare ip=$(curl "ifconfig.me")
 
 	declare response=$(curl \
-	-s \
+	-S \
 	-w '%{http_code}'\
 	-u "$GITHUB_USERNAME:$GITHUB_TOKEN" \
 	-H "Accept: application/vnd.github.v3+json" \
