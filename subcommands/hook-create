@@ -44,7 +44,7 @@ createGithubHook() {
 	echo $response
 	echo 
 
-	echo $($response | jq '.[] | {id: .id, error: .errors}')
+	echo $($response > jq '.[] | {id: .id, error: .errors}')
 
 	if [[ "${response: -3}" == "201" ]]
 	then
