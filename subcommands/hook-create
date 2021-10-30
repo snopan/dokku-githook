@@ -41,6 +41,8 @@ createGithubHook() {
 	"https://api.github.com/repos/$repository/hooks" \
 	-d '{"name": "web","config": {"url": "http://'$ip:9000'/'$webhook'", "insecure_ssl": "1"}}')
 
+	echo
+	echo $response
 	echo 
 	[[ "${response: -3}" == "201" ]] && return 0
 
