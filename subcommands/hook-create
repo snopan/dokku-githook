@@ -48,7 +48,7 @@ createGithubHook() {
 
 	if $(echo "$response" | jq 'has("id")')
 	then
-		$3=echo $(echo "$response" | jq '.id')
+		$3=$(echo "$response" | jq '.id')
 		return 0
 	else
 		echo "err: Type $(echo "$response" | jq '.message')" 
