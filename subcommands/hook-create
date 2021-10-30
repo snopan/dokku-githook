@@ -45,7 +45,7 @@ createGithubHook() {
 
 	echo "\n"
 	echo $response
-	[[ "$response" == "201" ]] && return 0
+	[[ "${response: -3}" == "201" ]] && return 0
 	return 1
 }
 
