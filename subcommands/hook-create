@@ -43,6 +43,9 @@ createGithubHook() {
 	echo
 	echo $response
 	echo 
+
+	echo $($response | jq '.[] | {id: .id, error: .errors')
+
 	if [[ "${response: -3}" == "201" ]]
 	then
 		delcare id=$(sed -e 's/^.*"id":"\([^"]*\)".*$/\1/' "$response")
