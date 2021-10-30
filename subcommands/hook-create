@@ -46,7 +46,7 @@ createGithubHook() {
 	echo 
 	if [[ "${response: -3}" == "201" ]]
 	then
-		delcare id=$(sed -e 's/^.*"id":"\([^"]*\)".*$/\1/' "$response")
+		delcare id=${sed -e 's/^.*"id":"\([^"]*\)".*$/\1/' "$response"}
 		echo $id
 		return 0
 	else
