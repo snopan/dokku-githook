@@ -17,7 +17,7 @@ createHook() {
 	declare repository=$2
 
 	source "$PLUGIN_PATH/data-operations/hooks"
-	if canAddHook "$webhook"
+	if canAddHook $webhook
 	then
 		if createGithubHook $webhook $repository
 		then
