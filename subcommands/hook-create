@@ -53,18 +53,10 @@ createGithubHook() {
 		if $(echo "$response" | jq 'has("errors")')
 		then 
 			echo $(echo "$response" | jq '.errors.[0].message')
+		fi
 		return 1
 	fi
-	# if [[ "${response: -3}" == "201" ]]
-	# then
-	# 	delcare id=$(sed -e 's/^.*"id":"\([^"]*\)".*$/\1/' "$response")
-	# 	echo $id
-	# 	return 0
-	# else
-	# 	echo "Failed to create webhook on github, please check the github api respons below:"
-	# 	echo $response
-	# 	return 1
-	# fi
+
 }
 
 createHook "$@"
