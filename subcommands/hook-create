@@ -10,7 +10,7 @@ createHook() {
 	declare cmd="githook:hook-create"
 
 	# Moves the input down by one so $1 will be the parameters after $cmd
-	[[ "$1" == "$cmd" ]] && shift 1
+	[[ $1 == $cmd ]] && shift 1
 
 	# The command format is $cmd $webhook $repository
 	declare webhook=$1
