@@ -42,9 +42,9 @@ createGithubHook() {
 	-d '{"name": "web","config": {"url": "http://'$ip:9000'/'$webhook'", "insecure_ssl": "1"}}')
 
 	echo 
-	echo ${response: -3}
 	[[ "${response: -3}" == "201" ]] && return 0
 
+	echo "Failed to create webhook on github, please check the github api respons below"
 	echo $response
 	return 1
 }
