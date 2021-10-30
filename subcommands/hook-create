@@ -49,10 +49,10 @@ createGithubHook() {
 		echo $(echo "$response" | jq '.id')
 		return 0
 	else
-		echo $(echo "$response" | jq '.message') 
+		echo "err: Type $(echo "$response" | jq '.message')" 
 		if $(echo "$response" | jq 'has("errors")')
 		then 
-			echo $(echo "$response" | jq '.errors[0].message')
+			echo "err: $(echo "$response" | jq '.errors[0].message')"
 		fi
 		return 1
 	fi
