@@ -46,12 +46,15 @@ createGithubHook() {
 
 	if $(echo "$response" | jq 'has("id")')
 	then
-		echo "has id"
+		echo $(echo "$response" | jq '.id')
+		return 0
 	else
-		echo "no id"
+		echo $(echo "$response" | jq '.message') 
+		if $(echo "$response" | jq 'has("errors")')
+		then 
+			echo $(echo "$response" | jq '.errors.[0].message')
+		return 1
 	fi
-
-	return 1
 	# if [[ "${response: -3}" == "201" ]]
 	# then
 	# 	delcare id=$(sed -e 's/^.*"id":"\([^"]*\)".*$/\1/' "$response")
