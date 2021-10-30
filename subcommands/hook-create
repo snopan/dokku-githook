@@ -21,7 +21,7 @@ createHook() {
 		if createGithubHook $webhook $repository
 		then
 			addHook "$webhook"
-			echo "Successfully added $webhook as a webhook"
+			echo "Successfully added \"$webhook\" as a webhook"
 		fi
 	else
 		echo "err: given hook already exist"
@@ -44,7 +44,7 @@ createGithubHook() {
 	echo 
 	[[ "${response: -3}" == "201" ]] && return 0
 
-	echo "Failed to create webhook on github, please check the github api respons below"
+	echo "Failed to create webhook on github, please check the github api respons below:"
 	echo $response
 	return 1
 }
