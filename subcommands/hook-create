@@ -52,7 +52,7 @@ createGithubHook() {
 		echo $(echo "$response" | jq '.message') 
 		if $(echo "$response" | jq 'has("errors")')
 		then 
-			echo $(echo "$response" | jq '.errors.[0].message')
+			echo $(echo "$response" | jq '.errors[0].message')
 		fi
 		return 1
 	fi
