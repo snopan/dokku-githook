@@ -22,7 +22,7 @@ createHook() {
 		if createGithubHook $webhook $repository
 		then
 			echo $webhookId
-			addHook "$webhook"
+			addHook $webhook
 			echo "Successfully added \"$webhook\" as a webhook"
 		fi
 	else
@@ -42,15 +42,15 @@ createGithubHook() {
 	"https://api.github.com/repos/$repository/hooks" \
 	-d '{"name": "web","config": {"url": "http://'$ip:9000'/'$webhook'", "insecure_ssl": "1"}}')
 
-	if $(echo "$response" | jq 'has("id")')
+	if $(echo $response | jq 'has("id")')
 	then
-		webhookId=$(echo "$response" | jq '.id')
+		webhookId=$(echo $response | jq '.id')
 		return 0
 	else
-		echo "err: Type $(echo "$response" | jq '.message')" 
-		if $(echo "$response" | jq 'has("errors")')
+		echo "err: Type $(echo $response | jq '.message')" 
+		if $(echo $response | jq 'has("errors")')
 		then 
-			echo "err: $(echo "$response" | jq '.errors[0].message')"
+			echo "err: $(echo $response | jq '.errors[0].message')"
 		fi
 		return 1
 	fi
