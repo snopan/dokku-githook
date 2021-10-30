@@ -3,6 +3,7 @@ set -eo pipefail
 [[ $DOKKU_TRACE ]] && set -x
 
 declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/githook"
+declare webhookId=""
 
 createHook() {
 	declare desc="Creates a new webhook and adds it to http server and github"
@@ -18,8 +19,7 @@ createHook() {
 	source "$PLUGIN_PATH/data-operations/hooks"
 	if canAddHook "$webhook"
 	then
-		declare webhookId=""
-		if createGithubHook $webhook $repository $webhookId
+		if createGithubHook $webhook $repository
 		then
 			echo $webhookId
 			addHook "$webhook"
@@ -42,13 +42,9 @@ createGithubHook() {
 	"https://api.github.com/repos/$repository/hooks" \
 	-d '{"name": "web","config": {"url": "http://'$ip:9000'/'$webhook'", "insecure_ssl": "1"}}')
 
-	echo
-	echo $response
-	echo 
-
 	if $(echo "$response" | jq 'has("id")')
 	then
-		$3=$(echo "$response" | jq '.id')
+		webhookId=$(echo "$response" | jq '.id')
 		return 0
 	else
 		echo "err: Type $(echo "$response" | jq '.message')" 
