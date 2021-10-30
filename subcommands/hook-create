@@ -18,8 +18,10 @@ createHook() {
 	source "$PLUGIN_PATH/data-operations/hooks"
 	if canAddHook "$webhook"
 	then
-		if createGithubHook $webhook $repository
+		declare webhookId=""
+		if createGithubHook $webhook $repository $webhookId
 		then
+			echo $webhookId
 			addHook "$webhook"
 			echo "Successfully added \"$webhook\" as a webhook"
 		fi
@@ -46,7 +48,7 @@ createGithubHook() {
 
 	if $(echo "$response" | jq 'has("id")')
 	then
-		echo $(echo "$response" | jq '.id')
+		$3=echo $(echo "$response" | jq '.id')
 		return 0
 	else
 		echo "err: Type $(echo "$response" | jq '.message')" 
