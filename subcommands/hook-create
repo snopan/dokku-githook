@@ -46,8 +46,8 @@ createGithubHook() {
 	echo 
 	if [[ "${response: -3}" == "201" ]]
 	then
-		delcare id=$(sed -e 's/^.*"id":"\([^"]*\)".*$/\1/' $response)
-		echo id
+		delcare id=$(sed -e 's/^.*"id":"\([^"]*\)".*$/\1/' "$response")
+		echo $id
 		return 0
 	else
 		echo "Failed to create webhook on github, please check the github api respons below:"
