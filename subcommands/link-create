@@ -31,6 +31,7 @@ createLink() {
 				echo "Successfully linked app \"$app\" with hook \"$webhook\""
 			else
 				echo "err: given hook does not exist"
+			fi
 		else
 			echo "err: given app does not have deployment setup"
 		fi
