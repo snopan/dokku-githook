@@ -7,7 +7,7 @@ declare webhookId=""
 
 removeDeploy() {
 	declare desc="Removes a deployment link for a dokku app"
-	declare cmd="githook:deploy-remoe"
+	declare cmd="githook:deploy-remove"
 
 	# Moves the input down by one so $1 will be the parameters after $cmd
 	[[ $1 == $cmd ]] && shift 1
