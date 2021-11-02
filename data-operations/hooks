@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/githook"
+declare retrieveWebhookId=""
 
 addHook() {
 	declare webhook=$1
@@ -10,15 +11,32 @@ addHook() {
 
 canAddHook() {
 	declare webhook=$1
+
+	# Checks to see if webhook is already in local data file
 	while read hook; do
+
+		# Turn each line into array because the format 
+		# is in "$webhook $webhookId"
 		declare hookArr=($hook)
-		echo ${hookArr[0]}
-		echo ${hookArr[1]}
 		[[ $webhook == ${hookArr[0]} ]] && return 1
 	done < "$PLUGIN_PATH/data/hooks"
 	return 0
 }
 
+getHookId() {
+	# Similar logic to "canAddHook", assigns a webhook id when found
+	declare webhook=$1
+	while read hook; do
+		declare hookArr=($hook)
+		if [[ $webhook == ${hookArr[0]} ]] 
+		then
+			retrieveWebhookId=${hookArr[1]}
+			return 10
+		fi
+	done < "$PLUGIN_PATH/data/hooks"
+	return 1
+}
+
 removeHook() {
-	echo "removed"
+	
 }

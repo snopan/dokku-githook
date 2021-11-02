@@ -16,11 +16,18 @@ createHook() {
 	declare webhook=$1
 	declare repository=$2
 
+	# Make hook data operations available
 	source "$PLUGIN_PATH/data-operations/hooks"
+
+	# Check if the hook exist in local data
 	if canAddHook $webhook
 	then
+
+		# Create the new hook with github
 		if createGithubHook $webhook $repository
 		then
+
+			# Once successful, add it to local data
 			addHook $webhook $webhookId
 			echo "Successfully added \"$webhook\" as a webhook"
 		fi
@@ -34,6 +41,9 @@ createGithubHook() {
 	declare repository=$2
 	declare ip=$(curl "ifconfig.me")
 
+	# Makes a request to github for creating webhook
+	# Running this assumes GITHUB_USERNAME and GITHUB_TOKEN
+	# is available in the environment variables
 	declare response=$(curl \
 	-sS \
 	-u "$GITHUB_USERNAME:$GITHUB_TOKEN" \
@@ -41,19 +51,24 @@ createGithubHook() {
 	"https://api.github.com/repos/$repository/hooks" \
 	-d '{"name": "web","config": {"url": "http://'$ip:9000'/'$webhook'", "insecure_ssl": "1"}}')
 
+	# If request was successful, there will be a webhook id returned
 	if $(echo $response | jq 'has("id")')
 	then
 		webhookId=$(echo $response | jq '.id')
 		return 0
 	else
+
+		# When request fails, there is always a message field
 		echo "err: Type $(echo $response | jq '.message')" 
+
+		# Sometimes there would be errors field aswell for certain
+		# errors so we should log that aswell
 		if $(echo $response | jq 'has("errors")')
 		then 
 			echo "err: $(echo $response | jq '.errors[0].message')"
 		fi
 		return 1
 	fi
-
 }
 
 createHook "$@"
