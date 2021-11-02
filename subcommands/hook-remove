@@ -14,6 +14,8 @@ removeHook() {
 
 	# The command format is $cmd $webhook $repository
 	declare webhook=$1
+	echo "webhook"
+	echo $webhook
 
 	source "$PLUGIN_PATH/data-operations/hooks"
 
