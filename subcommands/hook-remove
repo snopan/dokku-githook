@@ -44,6 +44,7 @@ removeGithubHook() {
 	-H "Accept: application/vnd.github.v3+json" \
 	"https://api.github.com/repos/$repository/hooks/$webhookId")
 
+	echo $response
 	if [[ -v $response ]]
 	then
 		echo "there is no response"
