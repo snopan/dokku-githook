@@ -14,8 +14,8 @@ removeDeploy() {
 	# The command format is $cmd $app
 	declare app=$1
 
-	# Make hook and link data operations available
-	source "$PLUGIN_PATH/data-operations/hooks"
+	# Make deploy and link data operations available
+	source "$PLUGIN_PATH/data-operations/deploy"
 	source "$PLUGIN_PATH/data-operations/links"
 
 	# Check if the app exist in local data
