@@ -21,8 +21,7 @@ createHook() {
 	then
 		if createGithubHook $webhook $repository
 		then
-			echo $webhookId
-			addHook $webhook
+			addHook $webhook $webhookId
 			echo "Successfully added \"$webhook\" as a webhook"
 		fi
 	else
