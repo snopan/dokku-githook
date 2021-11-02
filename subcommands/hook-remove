@@ -30,6 +30,7 @@ removeHook() {
 
 removeGithubHook() {
 	declare webhookId=$1
+	echo $webhookId
 
 	# Makes a request to github for removing webhook
 	# Running this assumes GITHUB_USERNAME and GITHUB_TOKEN
