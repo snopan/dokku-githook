@@ -30,6 +30,7 @@ getHookId() {
 		declare hookArr=($hook)
 		if [[ $webhook == ${hookArr[0]} ]] 
 		then
+			echo "found"
 			retrieveWebhookId=${hookArr[1]}
 			return 0
 		fi
