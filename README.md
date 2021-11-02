@@ -1,26 +1,41 @@
-## Dokku Webhook Deploy Plugin
+## Dokku Git Hook Plugin
+
+The plugin allows github webhook deploys similar to what heroku offers. Where each commit to main can trigger a deploy to a dokku app.
+
 ### How it works
-The plugin sets up a https server that listens for any webhook post request. Users can add a new hook to github and the https server. They can then link this hook to a git:sync operation which will update a given app with a given git repo.
+The plugin creates a webhook with github and listens for this hook in a simple http server. Users can the link the hook to a dokku app for auto deployment. The dokku app must have a repository link provided first before it can be linked to a hook.
 
-### Instructions
-Install the plugin, this will startup a https server
+### Install
+To install the plugin, just run
 ``` 
-dokku plugin:install ...
+dokku plugin:install https://github.com/snopan/dokku-git-hook
 ```
 
-Setup a webhook trigger, adds it to github and the https server
+### Commands
+#### Create a Webhook
+Creates a webhook on the given github repo and listens for it
 ```
-dokku webhook:create HOOK_NAME GIT_REPO_LINK
-```
-
-Setup what remote to pull when webhook is triggered for an app
-```
-dokku webhook:set-deploy APP_NAME GIT_REPO_LINK
+dokku githook:hook-create HOOK_NAME GIT_REPO_SHORT
 ```
 
-Link the webhook trigger to an app that has deployment repo setup
+The `GIT_REPO_SHORT` is in the following format `OWNER/REPO_NAME`, for further details look at the usage example below.
+
+#### Remove a Webhook
+Removes a webhook from github and stop listening for it
 ```
-dokku webhook:link APP_NAME HOOK_NAME
+dokku githook:hook-remove HOOK_NAME
+```
+
+#### Provide a repository for an App
+Sets a repository to use during app deployment
+```
+dokku githook:app-create APP_NAME GIT_REPO_LINK
+```
+
+#### Remove a repository for an App
+Removes the deploy repository for an App
+```
+dokku githook:app-remove APP_NAME
 ```
 
 ### Usage example

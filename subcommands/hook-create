@@ -12,23 +12,23 @@ createHook() {
 	# Moves the input down by one so $1 will be the parameters after $cmd
 	[[ $1 == $cmd ]] && shift 1
 
-	# The command format is $cmd $webhook $repository
+	# The command format is $cmd $webhook $repositoryShort
 	declare webhook=$1
-	declare repository=$2
+	declare repositoryShort=$2
 
 	# Make hook data operations available
 	source "$PLUGIN_PATH/data-operations/hooks"
 
 	# Check if the hook exist in local data
-	if canAddHook $webhook
+	if !(hookExist $webhook)
 	then
 
 		# Create the new hook with github
-		if createGithubHook $webhook $repository
+		if createGithubHook $webhook $repositoryShort
 		then
 
 			# Once successful, add it to local data
-			addHook $webhook $webhookId $repository
+			addHook $webhook $webhookId $repositoryShort
 			echo "Successfully added \"$webhook\" as a webhook"
 		fi
 	else
@@ -38,7 +38,7 @@ createHook() {
 
 createGithubHook() {
 	declare webhook=$1
-	declare repository=$2
+	declare repositoryShort=$2
 	declare ip=$(curl "ifconfig.me")
 
 	# Makes a request to github for creating webhook
@@ -48,7 +48,7 @@ createGithubHook() {
 	-sS \
 	-u "$GITHUB_USERNAME:$GITHUB_TOKEN" \
 	-H "Accept: application/vnd.github.v3+json" \
-	"https://api.github.com/repos/$repository/hooks" \
+	"https://api.github.com/repos/$repositoryShort/hooks" \
 	-d '{"name": "web","config": {"url": "http://'$ip:9000'/'$webhook'", "insecure_ssl": "1"}}')
 
 	# If request was successful, there will be a webhook id returned

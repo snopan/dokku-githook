@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/githook"
+
+addDeploy() {
+	declare app=$1
+	declare repository=$2
+	echo "$webhook $repository" >> "$PLUGIN_PATH/data/deploys"
+}
+
+deployExist() {
+	declare app=$1
+
+	# Checks to see if app is already in local data file
+	while read deployLine; do
+
+		# Turn each line into array because the format 
+		# is in "$app $repository"
+		declare deployArr=($deployLine)
+		[[ $app == ${deployArr[0]} ]] && return 0
+	done < "$PLUGIN_PATH/data/deploys"
+	return 1
+}
+
+removeDeploy() {
+	declare app=$1
+	sed -i "/$app /d" "$PLUGIN_PATH/data/deploys"
+}
