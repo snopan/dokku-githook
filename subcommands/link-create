@@ -15,11 +15,15 @@ createLink() {
 	declare app=$1
 	declare webhook=$2
 
-	# Make deploy data operations available
+	# Make hook, deploy and link data operations available
+	source "$PLUGIN_PATH/data-operations/hooks"
+	source "$PLUGIN_PATH/data-operations/deploys"
 	source "$PLUGIN_PATH/data-operations/links"
 
 	# Check if the app exist in local data
-	if !(linkExist $app $webhook)
+	if !(linkExist $app $webhook) && \
+		deployExist $app && \
+		hookExist $webhook
 	then
 		storeLink $app $webhook
 		echo "Successfully linked app \"$app\" with hook \"$webhook\""
