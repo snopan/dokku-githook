@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/githook"
+
+storeLink() {
+	declare app=$1
+	declare webhook=$2
+	echo "$app $webhook" >> "$PLUGIN_PATH/data/links"
+}
+
+linkExist() {
+	declare app=$1
+	declare webhook=$2
+
+	# Checks to see if link is already in local data file
+	shile read linkLine; do
+
+		# Turn each line into array because the format 
+		# is in "$app $webhook"
+		declare linkArr=($linkLine)
+		[[ $app == ${deployArr[0]} ]] && \
+		[[ $webhook == ${deployArr[1]} ]] && return 0
+	done < "$PLUGIN_PATH/data/links"
+	return 1
+}
+
+deleteSpecificLink() {
+	declare app=$1
+	declare webhook=$2
+	sed -i "/$app $webhook/d" "$PLUGIN_PATH/data/links"
+}
+
+deleteLinkByApp() {
+	declare app=$1
+	sed -i "/$app /d" "$PLUGIN_PATH/data/links"
+}
+
+deleteLinkByHook() {
+	declare webhook=$1
+	sed -i "/ $webhook/d" "$PLUGIN_PATH/data/links"
+}

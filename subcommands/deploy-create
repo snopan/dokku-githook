@@ -3,10 +3,9 @@ set -eo pipefail
 [[ $DOKKU_TRACE ]] && set -x
 
 declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/githook"
-declare webhookId=""
 
 createDeploy() {
-	declare desc="Creates a deployment link between a dokku app and repository"
+	declare desc="Stores deployment repository for a dokku app"
 	declare cmd="githook:deploy-create"
 
 	# Moves the input down by one so $1 will be the parameters after $cmd
@@ -23,6 +22,7 @@ createDeploy() {
 	if !(deployExist $app)
 	then
 		storeDeploy $app $repository
+		echo "Successfully added deploy repository for app \"$app\""
 	else
 		echo "err: given app already exist"
 	fi

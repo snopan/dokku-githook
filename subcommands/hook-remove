@@ -15,8 +15,9 @@ removeHook() {
 	# The command format is $cmd $webhook
 	declare webhook=$1
 
-	# Make hook data operations available
+	# Make hook and link data operations available
 	source "$PLUGIN_PATH/data-operations/hooks"
+	source "$PLUGIN_PATH/data-operations/links"
 
 	# Checks if webhook exist, if so then assign the webhookId to
 	# a $retrieveWebHookId and repositoryShort to $retrieveRepositoryShort
@@ -25,6 +26,7 @@ removeHook() {
 	then
 		removeGithubHook $retrieveWebhookId $retrieveRepositoryShort
 		deleteHook $webhook
+		deleteLinkByHook $webhook
 		echo "Successfully removed webhook \"$webhook\""
 	else
 		echo "err: given hook does not exist"
