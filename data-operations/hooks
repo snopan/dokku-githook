@@ -6,6 +6,8 @@ addHook() {
 	declare webhook=$1
 	declare webhookId=$2
 	echo "$webhook $webhookId" >> "$PLUGIN_PATH/data/hooks"
+	echo "current file"
+	echo "$PLUGIN_PATH/data/hooks"
 }
 
 canAddHook() {
