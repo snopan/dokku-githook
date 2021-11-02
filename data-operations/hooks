@@ -38,5 +38,5 @@ getHookId() {
 }
 
 removeHook() {
-	
+	echo "nothing yet"
 }
