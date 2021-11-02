@@ -59,13 +59,13 @@ createGithubHook() {
 	else
 
 		# When request fails, there is always a message field
-		echo "err: Type $(echo $response | jq '.message')" 
+		echo "github err: Type $(echo $response | jq '.message')" 
 
 		# Sometimes there would be errors field aswell for certain
 		# errors so we should log that aswell
 		if $(echo $response | jq 'has("errors")')
 		then 
-			echo "err: $(echo $response | jq '.errors[0].message')"
+			echo "github err: $(echo $response | jq '.errors[0].message')"
 		fi
 		return 1
 	fi
