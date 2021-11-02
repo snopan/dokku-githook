@@ -13,7 +13,7 @@ linkExist() {
 	declare webhook=$2
 
 	# Checks to see if link is already in local data file
-	shile read linkLine; do
+	while read linkLine; do
 
 		# Turn each line into array because the format 
 		# is in "$app $webhook"
