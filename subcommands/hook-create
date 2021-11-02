@@ -28,7 +28,7 @@ createHook() {
 		then
 
 			# Once successful, add it to local data
-			addHook $webhook $webhookId
+			addHook $webhook $webhookId $repository
 			echo "Successfully added \"$webhook\" as a webhook"
 		fi
 	else

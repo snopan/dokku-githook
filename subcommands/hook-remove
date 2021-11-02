@@ -22,7 +22,7 @@ removeHook() {
 	# a variable called "retrieveWebhookId"
 	if getHookId $webhook
 	then
-		removeGithubHook $retrieveWebhookId
+		removeGithubHook $retrieveWebhookId $retrieveRepository
 		echo "Successfully removed webhook \"$webhook\""
 	else
 		echo "err: given hook does not exist"
@@ -31,6 +31,7 @@ removeHook() {
 
 removeGithubHook() {
 	declare webhookId=$1
+	declare repository=$2
 
 	# Makes a request to github for removing webhook
 	# Running this assumes GITHUB_USERNAME and GITHUB_TOKEN
