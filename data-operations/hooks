@@ -42,5 +42,5 @@ getHookId() {
 
 removeHook() {
 	declare webhook=$1
-	sed -i "/$webhook/d" "$PLUGIN_PATH/data/hooks"
+	sed -i "/$webhook /d" "$PLUGIN_PATH/data/hooks"
 }
