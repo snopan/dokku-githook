@@ -19,6 +19,8 @@ createDeploy() {
 	# Make deploy data operations available
 	source "$PLUGIN_PATH/data-operations/deploys"
 
+	echo $app
+
 	# Check if the app exist in local data
 	if !(deployExist $app)
 	then
