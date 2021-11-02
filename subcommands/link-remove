@@ -18,7 +18,7 @@ removeDeploy() {
 	# Make link data operations available
 	source "$PLUGIN_PATH/data-operations/links"
 
-	# Check if the app exist in local data
+	# Check if the specific link combination exist in local data
 	if linkExist $app $webhook
 	then
 		deleteSpecificLink $app $webhook

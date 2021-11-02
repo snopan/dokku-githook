@@ -20,11 +20,15 @@ createLink() {
 	source "$PLUGIN_PATH/data-operations/deploys"
 	source "$PLUGIN_PATH/data-operations/links"
 
-	# Check if the app exist in local data
+	# Check if the specific link combination exist in local data
 	if !(linkExist $app $webhook)
 	then
+
+		# Check if the deployment exist for app in local data
 		if deployExist $app
 		then
+
+			# Check if the given webhook exist in local data
 			if hookExist $webhook
 			then
 				storeLink $app $webhook
@@ -33,7 +37,7 @@ createLink() {
 				echo "err: given hook does not exist"
 			fi
 		else
-			echo "err: given app does not have deployment setup"
+			echo "err: given app does not have deployment"
 		fi
 	else
 		echo "err: given app and hook combination already exist"

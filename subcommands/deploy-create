@@ -18,13 +18,13 @@ createDeploy() {
 	# Make deploy data operations available
 	source "$PLUGIN_PATH/data-operations/deploys"
 
-	# Check if the app exist in local data
+	# Check if the deployment exist for app in local data
 	if !(deployExist $app)
 	then
 		storeDeploy $app $repository
-		echo "Successfully added deploy repository for app \"$app\""
+		echo "Successfully added deployment repository for app \"$app\""
 	else
-		echo "err: given app already exist"
+		echo "err: given app already has deployment"
 	fi
 }
 

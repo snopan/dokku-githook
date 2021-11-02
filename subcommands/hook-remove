@@ -25,6 +25,9 @@ removeHook() {
 	if getHookId $webhook
 	then
 		removeGithubHook $retrieveWebhookId $retrieveRepositoryShort
+		
+		# Remove the hook from local data and 
+		# any links using the given hook
 		deleteHook $webhook
 		deleteLinkByHook $webhook
 		echo "Successfully removed webhook \"$webhook\""
