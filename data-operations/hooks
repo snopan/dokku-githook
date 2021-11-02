@@ -31,7 +31,7 @@ getHookId() {
 		if [[ $webhook == ${hookArr[0]} ]] 
 		then
 			retrieveWebhookId=${hookArr[1]}
-			return 10
+			return 0
 		fi
 	done < "$PLUGIN_PATH/data/hooks"
 	return 1
