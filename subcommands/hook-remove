@@ -7,7 +7,7 @@ declare webhookId=""
 
 removeHook() {
 	declare desc="Removes an existing webhook from local data and github"
-	declare cmd="githook:hook"
+	declare cmd="githook:hook-remove"
 
 	# Moves the input down by one so $1 will be the parameters after $cmd
 	[[ $1 == $cmd ]] && shift 1
