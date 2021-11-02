@@ -4,7 +4,7 @@ declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/githook"
 declare retrieveWebhookId=""
 declare retrieveRepositoryShort=""
 
-addHook() {
+storeHook() {
 	declare webhook=$1
 	declare webhookId=$2
 	declare repositoryShort=$3
@@ -40,7 +40,7 @@ getHookId() {
 	return 1
 }
 
-removeHook() {
+deleteHook() {
 	declare webhook=$1
 	sed -i "/$webhook /d" "$PLUGIN_PATH/data/hooks"
 }

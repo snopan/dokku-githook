@@ -21,7 +21,7 @@ removeDeploy() {
 	# Check if the app exist in local data
 	if deployExist $app
 	then
-		removeDeploy $app
+		deleteDeploy $app
 	else
 		echo "err: given app does not exist"
 	fi

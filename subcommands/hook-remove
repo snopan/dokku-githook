@@ -24,7 +24,7 @@ removeHook() {
 	if getHookId $webhook
 	then
 		removeGithubHook $retrieveWebhookId $retrieveRepositoryShort
-		removeHook $webhook
+		deleteHook $webhook
 		echo "Successfully removed webhook \"$webhook\""
 	else
 		echo "err: given hook does not exist"

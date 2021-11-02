@@ -24,7 +24,7 @@ createDeploy() {
 	# Check if the app exist in local data
 	if !(deployExist $app)
 	then
-		createDeploy $app $repository
+		storeDeploy $app $repository
 	else
 		echo "err: given app already exist"
 	fi

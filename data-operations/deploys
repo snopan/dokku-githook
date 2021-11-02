@@ -2,7 +2,7 @@
 
 declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/githook"
 
-addDeploy() {
+storeDeploy() {
 	declare app=$1
 	declare repository=$2
 	echo "$webhook $repository" >> "$PLUGIN_PATH/data/deploys"
@@ -22,7 +22,7 @@ deployExist() {
 	return 1
 }
 
-removeDeploy() {
+deleteDeploy() {
 	declare app=$1
 	sed -i "/$app /d" "$PLUGIN_PATH/data/deploys"
 }
