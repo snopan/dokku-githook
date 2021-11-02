@@ -18,8 +18,8 @@ linkExist() {
 		# Turn each line into array because the format 
 		# is in "$app $webhook"
 		declare linkArr=($linkLine)
-		[[ $app == ${deployArr[0]} ]] && \
-		[[ $webhook == ${deployArr[1]} ]] && return 0
+		[[ $app == ${linkArr[0]} ]] && \
+		[[ $webhook == ${linkArr[1]} ]] && return 0
 	done < "$PLUGIN_PATH/data/links"
 	return 1
 }
