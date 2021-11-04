@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/githook"
+declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/github-hook"
 
 storeLink() {
 	declare hook=$1
