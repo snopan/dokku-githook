@@ -28,8 +28,8 @@ hookExist() {
 getHookId() {
 	# Similar logic to "canAddHook", assigns a hook id when found
 	declare hook=$1
-	while read hook; do
-		declare hookArr=($hook)
+	while read hookLine; do
+		declare hookArr=($hookLine)
 		if [[ $hook == ${hookArr[0]} ]] 
 		then
 			retrieveHookId=${hookArr[1]}
