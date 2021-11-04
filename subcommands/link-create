@@ -24,20 +24,20 @@ createLink() {
 	if !(linkExist $hook $app)
 	then
 
-		# Check if the deployment exist for app in local data
-		if deployExist $app
+		# Check if the given hook exist in local data
+		if hookExist $hook
 		then
 
-			# Check if the given hook exist in local data
-			if hookExist $hook
-			then
+			# Check if the deployment exist for app in local data
+			if deployExist $app
+			then			
 				storeLink $hook $app
 				echo "Successfully linked hook \"$hook\" with app \"$app\""
 			else
-				echo "err: given hook does not exist"
+				echo "err: given app does not have deployment"
 			fi
 		else
-			echo "err: given app does not have deployment"
+			echo "err: given hook does not exist"
 		fi
 	else
 		echo "err: given app and hook combination already exist"
