@@ -3,44 +3,44 @@ set -eo pipefail
 [[ $DOKKU_TRACE ]] && set -x
 
 declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/githook"
-declare webhookId=""
+declare hookId=""
 
 removeHook() {
-	declare desc="Removes an existing webhook from local data and github"
-	declare cmd="githook:hook-remove"
+	declare desc="Removes an existing hook from local data and github"
+	declare cmd="github-hook:hook-remove"
 
 	# Moves the input down by one so $1 will be the parameters after $cmd
 	[[ $1 == $cmd ]] && shift 1
 
-	# The command format is $cmd $webhook
-	declare webhook=$1
+	# The command format is $cmd $hook
+	declare hook=$1
 
 	# Make hook and link data operations available
 	source "$PLUGIN_PATH/data-operations/hooks"
 	source "$PLUGIN_PATH/data-operations/links"
 
-	# Checks if webhook exist, if so then assign the webhookId to
-	# a $retrieveWebHookId and repositoryShort to $retrieveRepositoryShort
+	# Checks if hook exist, if so then assign the hookId to
+	# a $retrieveHookId and repositoryShort to $retrieveRepositoryShort
 	# this is defined in the hook data operation
-	if getHookId $webhook
+	if getHookId $hook
 	then
-		removeGithubHook $retrieveWebhookId $retrieveRepositoryShort
+		removeGithubHook $retrieveHookId $retrieveRepositoryShort
 		
 		# Remove the hook from local data and 
 		# any links using the given hook
-		deleteHook $webhook
-		deleteLinkByHook $webhook
-		echo "Successfully removed webhook \"$webhook\""
+		deleteHook $hook
+		deleteLinkByHook $hook
+		echo "Successfully removed hook \"$hook\""
 	else
 		echo "err: given hook does not exist"
 	fi
 }
 
 removeGithubHook() {
-	declare webhookId=$1
+	declare hookId=$1
 	declare repositoryShort=$2
 
-	# Makes a request to github for removing webhook
+	# Makes a request to github for removing hook
 	# Running this assumes GITHUB_USERNAME and GITHUB_TOKEN
 	# is available in the environment variables
 	declare response=$(curl \
@@ -48,7 +48,7 @@ removeGithubHook() {
 	-X DELETE \
 	-u "$GITHUB_USERNAME:$GITHUB_TOKEN" \
 	-H "Accept: application/vnd.github.v3+json" \
-	"https://api.github.com/repos/$repositoryShort/hooks/$webhookId")
+	"https://api.github.com/repos/$repositoryShort/hooks/$hookId")
 
 	if [[ -n $response ]]
 	then

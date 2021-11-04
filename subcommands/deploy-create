@@ -6,7 +6,7 @@ declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/githook"
 
 createDeploy() {
 	declare desc="Stores deployment repository for a dokku app"
-	declare cmd="githook:deploy-create"
+	declare cmd="github-hook:deploy-create"
 
 	# Moves the input down by one so $1 will be the parameters after $cmd
 	[[ $1 == $cmd ]] && shift 1
@@ -21,8 +21,13 @@ createDeploy() {
 	# Check if the deployment exist for app in local data
 	if !(deployExist $app)
 	then
-		storeDeploy $app $repository
-		echo "Successfully added deployment repository for app \"$app\""
+		if (dokku apps:exists $app)
+		then
+			storeDeploy $app $repository
+			echo "Successfully added deployment repository for app \"$app\""
+		else
+			echo "err: given app is not created yet with dokku"
+		fi
 	else
 		echo "err: given app already has deployment"
 	fi

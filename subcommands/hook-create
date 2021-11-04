@@ -3,33 +3,33 @@ set -eo pipefail
 [[ $DOKKU_TRACE ]] && set -x
 
 declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/githook"
-declare webhookId=""
+declare hookId=""
 
 createHook() {
-	declare desc="Creates a new webhook and adds it to http server and github"
-	declare cmd="githook:hook-create"
+	declare desc="Creates a new hook and adds it to http server and github"
+	declare cmd="github-hook:hook-create"
 
 	# Moves the input down by one so $1 will be the parameters after $cmd
 	[[ $1 == $cmd ]] && shift 1
 
-	# The command format is $cmd $webhook $repositoryShort
-	declare webhook=$1
+	# The command format is $cmd $hook $repositoryShort
+	declare hook=$1
 	declare repositoryShort=$2
 
 	# Make hook data operations available
 	source "$PLUGIN_PATH/data-operations/hooks"
 
 	# Check if the hook exist in local data
-	if !(hookExist $webhook)
+	if !(hookExist $hook)
 	then
 
 		# Create the new hook with github
-		if createGithubHook $webhook $repositoryShort
+		if createGithubHook $hook $repositoryShort
 		then
 
 			# Once successful, add it to local data
-			storeHook $webhook $webhookId $repositoryShort
-			echo "Successfully added \"$webhook\" as a webhook"
+			storeHook $hook $hookId $repositoryShort
+			echo "Successfully added \"$hook\" as a hook"
 		fi
 	else
 		echo "err: given hook already exist"
@@ -37,11 +37,11 @@ createHook() {
 }
 
 createGithubHook() {
-	declare webhook=$1
+	declare hook=$1
 	declare repositoryShort=$2
 	declare ip=$(curl "ifconfig.me")
 
-	# Makes a request to github for creating webhook
+	# Makes a request to github for creating hook
 	# Running this assumes GITHUB_USERNAME and GITHUB_TOKEN
 	# is available in the environment variables
 	declare response=$(curl \
@@ -49,12 +49,12 @@ createGithubHook() {
 	-u "$GITHUB_USERNAME:$GITHUB_TOKEN" \
 	-H "Accept: application/vnd.github.v3+json" \
 	"https://api.github.com/repos/$repositoryShort/hooks" \
-	-d '{"name": "web","config": {"url": "http://'$ip:9000'/'$webhook'", "insecure_ssl": "1"}}')
+	-d '{"name": "web","config": {"url": "http://'$ip:9000'/'$hook'", "insecure_ssl": "1"}}')
 
-	# If request was successful, there will be a webhook id returned
+	# If request was successful, there will be a hook id returned
 	if $(echo $response | jq 'has("id")')
 	then
-		webhookId=$(echo $response | jq '.id')
+		hookId=$(echo $response | jq '.id')
 		return 0
 	else
 

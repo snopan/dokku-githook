@@ -1,38 +1,38 @@
 #!/usr/bin/env bash
 
 declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/githook"
-declare retrieveWebhookId=""
+declare retrieveHookId=""
 declare retrieveRepositoryShort=""
 
 storeHook() {
-	declare webhook=$1
-	declare webhookId=$2
+	declare hook=$1
+	declare hookId=$2
 	declare repositoryShort=$3
-	echo "$webhook $webhookId $repositoryShort" >> "$PLUGIN_PATH/data/hooks"
+	echo "$hook $hookId $repositoryShort" >> "$PLUGIN_PATH/data/hooks"
 }
 
 hookExist() {
-	declare webhook=$1
+	declare hook=$1
 
-	# Checks to see if webhook is already in local data file
+	# Checks to see if hook is already in local data file
 	while read hookLine; do
 
 		# Turn each line into array because the format 
-		# is in "$webhook $webhookId $repositoryShort"
+		# is in "$hook $hookId $repositoryShort"
 		declare hookArr=($hookLine)
-		[[ $webhook == ${hookArr[0]} ]] && return 0
+		[[ $hook == ${hookArr[0]} ]] && return 0
 	done < "$PLUGIN_PATH/data/hooks"
 	return 1
 }
 
 getHookId() {
-	# Similar logic to "canAddHook", assigns a webhook id when found
-	declare webhook=$1
+	# Similar logic to "canAddHook", assigns a hook id when found
+	declare hook=$1
 	while read hook; do
 		declare hookArr=($hook)
-		if [[ $webhook == ${hookArr[0]} ]] 
+		if [[ $hook == ${hookArr[0]} ]] 
 		then
-			retrieveWebhookId=${hookArr[1]}
+			retrieveHookId=${hookArr[1]}
 			retrieveRepositoryShort=${hookArr[2]}
 			return 0
 		fi
@@ -41,6 +41,6 @@ getHookId() {
 }
 
 deleteHook() {
-	declare webhook=$1
-	sed -i "/$webhook /d" "$PLUGIN_PATH/data/hooks"
+	declare hook=$1
+	sed -i "/$hook /d" "$PLUGIN_PATH/data/hooks"
 }

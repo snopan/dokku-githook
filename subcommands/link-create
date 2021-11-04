@@ -5,15 +5,15 @@ set -eo pipefail
 declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/githook"
 
 createLink() {
-	declare desc="Creates a link between a dokku app and webhook"
-	declare cmd="githook:link-create"
+	declare desc="Creates a link between a dokku app and hook"
+	declare cmd="github-hook:link-create"
 
 	# Moves the input down by one so $1 will be the parameters after $cmd
 	[[ $1 == $cmd ]] && shift 1
 
-	# The command format is $cmd $app $webhook
-	declare app=$1
-	declare webhook=$2
+	# The command format is $cmd $hook $app
+	declare hook=$1
+	declare app=$2
 
 	# Make hook, deploy and link data operations available
 	source "$PLUGIN_PATH/data-operations/hooks"
@@ -21,18 +21,18 @@ createLink() {
 	source "$PLUGIN_PATH/data-operations/links"
 
 	# Check if the specific link combination exist in local data
-	if !(linkExist $app $webhook)
+	if !(linkExist $hook $app)
 	then
 
 		# Check if the deployment exist for app in local data
 		if deployExist $app
 		then
 
-			# Check if the given webhook exist in local data
-			if hookExist $webhook
+			# Check if the given hook exist in local data
+			if hookExist $hook
 			then
-				storeLink $app $webhook
-				echo "Successfully linked app \"$app\" with hook \"$webhook\""
+				storeLink $hook $app
+				echo "Successfully linked hook \"$hook\" with app \"$app\""
 			else
 				echo "err: given hook does not exist"
 			fi
