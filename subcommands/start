@@ -10,21 +10,21 @@ start() {
 	# Login to dokku github
 	dokku git:auth github.com $GITHUB_USERNAME $GITHUB_TOKEN
 
-	# Remove any pre-existing screens
 	if screen -list | grep -q $SCREEN_NAME
 	then
+
+		# When there's screen run a Ctrl+C to stop any existing programs
 		echo "thre is stuff"
-		screen -d -S $SCREEN_NAME -X stuff "^C"
+		screen -S $SCREEN_NAME -X stuff '^C'
 	else
+
+		# If there are no screens the make a new one
 		echo "thre is no stuff"
-		screen -d -m -S $SCREEN_NAME
+		screen -dmS $SCREEN_NAME
 	fi
 
-	# Make a new screen and attach to it
-	screen -r $SCREEN_NAME
-
-	# Start golang server
-	~/go/bin/go run main.go
+	# Run golang server in the screen
+	screen -S $SCREEN_NAME -X stuff '~/go/bin/go run main.go\n'
 }
 
 start "$@"
