@@ -28,7 +28,7 @@ removeDeploy() {
 		deleteLinkByApp $app
 		echo "Successfully removed deployment for app \"$app\""
 	else
-		echo "err: given app has no deployment"
+		echo "err: Given app has no deployment"
 	fi
 }
 

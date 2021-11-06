@@ -32,7 +32,7 @@ removeHook() {
 		deleteLinkByHook $hook
 		echo "Successfully removed hook \"$hook\""
 	else
-		echo "err: given hook does not exist"
+		echo "err: Given hook does not exist"
 	fi
 }
 

@@ -26,10 +26,10 @@ createDeploy() {
 			storeDeploy $app $repository
 			echo "Successfully added deployment repository for app \"$app\""
 		else
-			echo "err: given app is not created yet with dokku"
+			echo "err: Given app is not created yet with dokku"
 		fi
 	else
-		echo "err: given app already has deployment"
+		echo "err: Given app already has deployment"
 	fi
 }
 

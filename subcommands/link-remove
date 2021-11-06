@@ -24,7 +24,7 @@ removeDeploy() {
 		deleteSpecificLink $hook $app
 		echo "Successfully removed link between hook \"$hook\" and app \"$app\""
 	else
-		echo "err: given app and hook combination does not exist"
+		echo "err: Given app and hook combination does not exist"
 	fi
 }
 
