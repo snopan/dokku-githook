@@ -21,10 +21,10 @@ start() {
 	fi
 
 	# Make a new screen and attach to it
-	screen -r $SCREEN_NAME
+	# screen -r $SCREEN_NAME
 
 	# Start golang server
-	~/go/bin/go run main.go
+	# ~/go/bin/go run main.go
 }
 
 start "$@"
