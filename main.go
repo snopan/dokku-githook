@@ -5,6 +5,7 @@ import (
 	"bufio"
 	"os"
 	"os/exec"
+	"fmt"
 	"log"
 	"strings"
 )
@@ -21,7 +22,7 @@ func readLocalHooksData() []string {
 	returnArr := make([]string, 0)
 
 	// Retrieve hooks from the local data storage
-	hookFile, err := os.Open(os.Getenv("PLUGIN_AVAILABLE_PATH")+"/"+PLUGIN_NAME+"/data/hooks")
+	hookFile, err := os.Open(fmt.Sprintf("%s/%s/data/hooks", os.Getenv("PLUGIN_AVAILABLE_PATH"), PLUGIN_NAME))
 	checkErr(err)
 
 	// Loop through each line and retrieve the hook
@@ -45,7 +46,7 @@ func readLocalLinksData() map[string][]string {
 	returnDict := make(map[string][]string)
 
 	// Retrieve links from the local data storage
-	linkFile, err := os.Open(os.Getenv("PLUGIN_AVAILABLE_PATH")+"/"+PLUGIN_NAME+"/data/links")
+	linkFile, err := os.Open(fmt.Sprintf("%s/%s/data/links", os.Getenv("PLUGIN_AVAILABLE_PATH"), PLUGIN_NAME))
 	checkErr(err)
 
 	// Loop through each line and retrieve the hook and app
@@ -74,7 +75,7 @@ func readLocalDeploysData() map[string]string {
 	returnDict := make(map[string]string)
 
 	// Retrieve deploys from the local data storage
-	deployFile, err := os.Open(os.Getenv("PLUGIN_AVAILABLE_PATH")+"/"+PLUGIN_NAME+"/data/deploys")
+	deployFile, err := os.Open(fmt.Sprintf("%s/%s/data/deploys", os.Getenv("PLUGIN_AVAILABLE_PATH"), PLUGIN_NAME))
 	checkErr(err)
 
 	// Loop through each line and retrieve the app and repository
@@ -104,10 +105,17 @@ func main() {
 	// For each hook, start listening for github requests
 	for _, hook := range hookArr {
 		http.HandleFunc("/"+hook, func(w http.ResponseWriter, r *http.Request) {
+
+			// When reuest comes, find all the apps linked to the hook
+			log.Print(fmt.Sprintf("Hook \"%s\" was triggered", hook))
 			appArr := linkDict[hook]
 			for _, app :=range appArr {
+
+				// Then deploy each app
+				log.Print(fmt.Sprintf("App \"%s\" is being deployed", app))
 				cmd := exec.Command("dokku", "--build", "git:sync", app, deployDict[app])
 				cmd.Run()
+				log.Print(fmt.Sprintf("App \"%s\" is deployed!", app))
 			}
 		})
 	}
