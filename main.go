@@ -104,7 +104,7 @@ func main() {
 		http.HandleFunc("/"+hook, func(w http.ResponseWriter, r *http.Request) {
 			appArr := linkDict[hook]
 			for _, app :=range appArr {
-				cmd := exec.Command("dokku", "git:sync", app, deployDict[app])
+				cmd := exec.Command("dokku", "--build", "git:sync", app, deployDict[app])
 				cmd.Run()
 			}
 		})

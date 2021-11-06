@@ -9,8 +9,16 @@ installGo() {
 	# mv "./go" "$PLUGIN_PATH/"
 }
 
+installScreen() {
+	apt-get update
+	apt-get install screen -y
+}
+
 # Install golang binaries
 # installGo
+
+# Install screen
+installScreen
 
 # Create all storage files
 mkdir "$PLUGIN_PATH/data"
