@@ -45,7 +45,7 @@ func readLocalLinksData() map[string][]string {
 	returnDict := make(map[string][]string)
 
 	// Retrieve links from the local data storage
-	linkFile, err := os.Open(os.Getenv("PLUGIN_AVAILABLE_PATH")+"/"+PLUGIN_NAME+"data/links")
+	linkFile, err := os.Open(os.Getenv("PLUGIN_AVAILABLE_PATH")+"/"+PLUGIN_NAME+"/data/links")
 	checkErr(err)
 
 	// Loop through each line and retrieve the hook and app
@@ -74,7 +74,7 @@ func readLocalDeploysData() map[string]string {
 	returnDict := make(map[string]string)
 
 	// Retrieve deploys from the local data storage
-	deployFile, err := os.Open(os.Getenv("PLUGIN_AVAILABLE_PATH")+"/"+PLUGIN_NAME+"data/deploys")
+	deployFile, err := os.Open(os.Getenv("PLUGIN_AVAILABLE_PATH")+"/"+PLUGIN_NAME+"/data/deploys")
 	checkErr(err)
 
 	// Loop through each line and retrieve the app and repository
