@@ -17,6 +17,12 @@ apt update
 apt install screen -y
 apt install ufw -y
 
+# Login to dokku github
+dokku git:auth github.com $GITHUB_USERNAME $GITHUB_TOKEN
+
+# Allow the port
+ufw allow $GITHUB_HOOK_PORT
+
 # Create all storage files
 mkdir "$PLUGIN_PATH/data"
 echo -n > "$PLUGIN_PATH/data/hooks"

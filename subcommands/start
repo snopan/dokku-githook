@@ -7,12 +7,6 @@ declare SCREEN_NAME="github-hook"
 
 start() {
 
-	# Login to dokku github
-	dokku git:auth github.com $GITHUB_USERNAME $GITHUB_TOKEN
-
-	# Allow the port
-	sudo ufw allow $GITHUB_HOOK_PORT
-
 	# When there's a screen running, end it
 	if screen -list | grep -q $SCREEN_NAME
 	then
