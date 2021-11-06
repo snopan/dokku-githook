@@ -11,7 +11,7 @@ start() {
 	dokku git:auth github.com $GITHUB_USERNAME $GITHUB_TOKEN
 
 	# Allow the port
-	ufw allow $GITHUB_HOOK_PORT
+	sudo ufw allow $GITHUB_HOOK_PORT
 
 	# When there's a screen running, end it
 	if screen -list | grep -q $SCREEN_NAME
