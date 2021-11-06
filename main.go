@@ -9,6 +9,8 @@ import (
 	"strings"
 )
 
+var PLUGIN_NAME="github-hook"
+
 func checkErr(e error) {
 	if e != nil {
 		log.Fatal(e)
@@ -19,7 +21,7 @@ func readLocalHooksData() []string {
 	returnArr := make([]string, 0)
 
 	// Retrieve hooks from the local data storage
-	hookFile, err := os.Open(os.Getenv("PLUGIN_AVAILABLE_PATH")+"/data/hooks")
+	hookFile, err := os.Open(os.Getenv("PLUGIN_AVAILABLE_PATH")+"/"+PLUGIN_NAME+"/data/hooks")
 	checkErr(err)
 
 	// Loop through each line and retrieve the hook
@@ -43,7 +45,7 @@ func readLocalLinksData() map[string][]string {
 	returnDict := make(map[string][]string)
 
 	// Retrieve links from the local data storage
-	linkFile, err := os.Open(os.Getenv("PLUGIN_AVAILABLE_PATH")+"data/links")
+	linkFile, err := os.Open(os.Getenv("PLUGIN_AVAILABLE_PATH")+"/"+PLUGIN_NAME+"data/links")
 	checkErr(err)
 
 	// Loop through each line and retrieve the hook and app
@@ -72,7 +74,7 @@ func readLocalDeploysData() map[string]string {
 	returnDict := make(map[string]string)
 
 	// Retrieve deploys from the local data storage
-	deployFile, err := os.Open(os.Getenv("PLUGIN_AVAILABLE_PATH")+"data/deploys")
+	deployFile, err := os.Open(os.Getenv("PLUGIN_AVAILABLE_PATH")+"/"+PLUGIN_NAME+"data/deploys")
 	checkErr(err)
 
 	// Loop through each line and retrieve the app and repository
