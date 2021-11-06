@@ -16,6 +16,8 @@ start() {
 	if screen -list | grep -q $SCREEN_NAME
 	then
 		screen -S $SCREEN_NAME -X stuff "^C"
+	else
+		screen -S $SCREEN_NAME
 	fi
 
 	# Make a new screen and attach to it
