@@ -5,8 +5,6 @@ set -eo pipefail
 declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/github-hook"
 declare SCREEN_NAME="github-hook"
 
-
-
 start() {
 
 	# Login to dokku github
@@ -15,8 +13,10 @@ start() {
 	# Remove any pre-existing screens
 	if screen -list | grep -q $SCREEN_NAME
 	then
+		echo "thre is stuff"
 		screen -S $SCREEN_NAME -X stuff "^C"
 	else
+		echo "thre is no stuff"
 		screen -S $SCREEN_NAME
 	fi
 
