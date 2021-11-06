@@ -10,18 +10,16 @@ start() {
 	# Login to dokku github
 	dokku git:auth github.com $GITHUB_USERNAME $GITHUB_TOKEN
 
+	# When there's a screen running, end it
 	if screen -list | grep -q $SCREEN_NAME
 	then
-
-		# When there's screen run a Ctrl+C to stop any existing programs
-		echo "Github hook server already running, restarting now..."
-		screen -S $SCREEN_NAME -X stuff '^C'
-	else
-
-		# If there are no screens the make a new one
-		echo "Starting up github hook server now..."
-		screen -dmS $SCREEN_NAME
+		echo "Github hook server already running, ending the previous session"
+		screen -S $SCREEN_NAME -X quit
 	fi
+
+	# Make a new screen
+	echo "Starting up github hook server now..."
+	screen -dmS $SCREEN_NAME
 
 	# Run golang server in the screen
 	screen -S $SCREEN_NAME -X stuff 'cd '$PLUGIN_PATH'\n'
