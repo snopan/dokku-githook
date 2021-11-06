@@ -129,6 +129,6 @@ func main() {
 	}
 
 	// Start the http server
-	http.ListenAndServe(":7400", nil)
+	http.ListenAndServe(":123", nil)
 	log.Print(fmt.Sprintf("Github hook http server has started on port %s!", os.Getenv("GITHUB_HOOK_PORT")))
 }
