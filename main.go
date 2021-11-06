@@ -129,7 +129,6 @@ func main() {
 	}
 
 	// Start the http server
-	log.Print(fmt.Sprintf("Trying to bind to port %s!", os.Getenv("GITHUB_HOOK_PORT")))
-	http.ListenAndServe(":4000", nil)
-	log.Print(fmt.Sprintf("Github hook http server has started on port %s!", os.Getenv("GITHUB_HOOK_PORT")))
+	log.Print(fmt.Sprintf("Starting the http server on port %s!", os.Getenv("GITHUB_HOOK_PORT")))
+	http.ListenAndServe(fmt.Sprintf(":%s",os.Getenv("GITHUB_HOOK_PORT")), nil)
 }
