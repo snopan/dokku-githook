@@ -10,6 +10,9 @@ start() {
 	# Login to dokku github
 	dokku git:auth github.com $GITHUB_USERNAME $GITHUB_TOKEN
 
+	# Allow the port
+	ufw allow $GITHUB_HOOK_PORT
+
 	# When there's a screen running, end it
 	if screen -list | grep -q $SCREEN_NAME
 	then
@@ -20,9 +23,6 @@ start() {
 	# Make a new screen
 	echo "Starting up github hook server now..."
 	screen -dmS $SCREEN_NAME
-
-	# Allow the port
-	ufw allow $GITHUB_HOOK_PORT
 
 	# Run golang server in the screen
 	screen -S $SCREEN_NAME -X stuff 'cd '$PLUGIN_PATH'\n'
