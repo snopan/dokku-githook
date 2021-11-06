@@ -1,16 +1,16 @@
 package main
 
 import (
-	"net/http"
 	"bufio"
-	"os"
-	"os/exec"
 	"fmt"
 	"log"
+	"net/http"
+	"os"
+	"os/exec"
 	"strings"
 )
 
-var PLUGIN_NAME="github-hook"
+var PLUGIN_NAME = "github-hook"
 
 func checkErr(e error) {
 	if e != nil {
@@ -39,9 +39,9 @@ func readLocalHooksData() []string {
 		returnArr = append(returnArr, hook)
 	}
 	checkErr(hookScanner.Err())
+
 	return returnArr
 }
-
 
 func readLocalLinksData() map[string][]string {
 	returnDict := make(map[string][]string)
@@ -70,6 +70,7 @@ func readLocalLinksData() map[string][]string {
 		returnDict[hook] = append(returnDict[hook], app)
 	}
 	checkErr(linkScanner.Err())
+
 	return returnDict
 }
 
@@ -95,11 +96,11 @@ func readLocalDeploysData() map[string]string {
 		returnDict[app] = repository
 	}
 	checkErr(deployScanner.Err())
+
 	return returnDict
 }
 
 func main() {
-
 	// Read all the local data
 	hookArr := readLocalHooksData()
 	log.Print("Loaded local hooks data")
@@ -113,22 +114,21 @@ func main() {
 	// For each hook, start listening for github requests
 	for _, hook := range hookArr {
 		http.HandleFunc("/"+hook, func(w http.ResponseWriter, r *http.Request) {
-
-			// When reuest comes, find all the apps linked to the hook
-			log.Print(fmt.Sprintf("Hook \"%s\" was triggered", hook))
+			// When request comes in, find all the apps linked to the hook
+			log.Print(fmt.Sprintf(`Hook "%s" was triggered`, hook))
 			appArr := linkDict[hook]
-			for _, app :=range appArr {
+			for _, app := range appArr {
 
 				// Then deploy each app
-				log.Print(fmt.Sprintf("App \"%s\" is being deployed", app))
+				log.Print(fmt.Sprintf(`App "%s" is being deployed`, app))
 				cmd := exec.Command("dokku", "--build", "git:sync", app, deployDict[app])
 				cmd.Run()
-				log.Print(fmt.Sprintf("App \"%s\" is deployed!", app))
+				log.Print(fmt.Sprintf(`App "%s" is deployed!`, app))
 			}
 		})
 	}
 
 	// Start the http server
 	log.Print(fmt.Sprintf("Starting the http server on port %s!", os.Getenv("GITHUB_HOOK_PORT")))
-	http.ListenAndServe(fmt.Sprintf(":%s",os.Getenv("GITHUB_HOOK_PORT")), nil)
+	http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("GITHUB_HOOK_PORT")), nil)
 }
