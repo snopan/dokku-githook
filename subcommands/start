@@ -24,7 +24,8 @@ start() {
 	fi
 
 	# Run golang server in the screen
-	screen -S $SCREEN_NAME -X stuff 'cd '$PLUGIN_PATH'\n ~/go/bin/go run '$PLUGIN_PATH'/main.go\n'
+	screen -S $SCREEN_NAME -X stuff 'cd '$PLUGIN_PATH''
+	screen -S $SCREEN_NAME -X stuff '~/go/bin/go run ./main.go\n'
 }
 
 start "$@"
