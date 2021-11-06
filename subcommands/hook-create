@@ -20,7 +20,7 @@ createHook() {
 	source "$PLUGIN_PATH/data-operations/hooks"
 
 	# Check if the hook exist in local data
-	if !(hookExist $hook)
+	if ! hookExist $hook
 	then
 
 		# Create the new hook with github
@@ -49,7 +49,7 @@ createGithubHook() {
 	-u "$GITHUB_USERNAME:$GITHUB_TOKEN" \
 	-H "Accept: application/vnd.github.v3+json" \
 	"https://api.github.com/repos/$repositoryShort/hooks" \
-	-d '{"name": "web","config": {"url": "http://'$ip:9000'/'$hook'", "insecure_ssl": "1"}}')
+	-d '{"name": "web","config": {"url": "http://'$ip:9000'/'$hook':'$GITHUB_HOOK_PORT'", "insecure_ssl": "1"}}')
 
 	# If request was successful, there will be a hook id returned
 	if $(echo $response | jq 'has("id")')

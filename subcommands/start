@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -eo pipefail
+[[ $DOKKU_TRACE ]] && set -x
+
+declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/github-hook"
+declare SCREEN_NAME="github-hook"
+
+
+
+start() {
+
+	# Login to dokku github
+	dokku git:auth github.com $GITHUB_USERNAME $GITHUB_TOKEN
+
+	# Remove any pre-existing screens
+	if screen -list | grep -q $SCREEN_NAME
+	then
+		screen -S $SCREEN_NAME -X stuff "^C"
+	fi
+
+	# Make a new screen and attach to it
+	screen -r $SCREEN_NAME
+
+	# Start golang server
+	~/go/bin/go run main.go
+}
+
+start "$@"

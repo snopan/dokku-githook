@@ -19,7 +19,7 @@ createDeploy() {
 	source "$PLUGIN_PATH/data-operations/deploys"
 
 	# Check if the deployment exist for app in local data
-	if !(deployExist $app)
+	if ! deployExist $app
 	then
 		if (dokku apps:exists $app)
 		then
