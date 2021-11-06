@@ -11,13 +11,13 @@ start() {
 	dokku git:auth github.com $GITHUB_USERNAME $GITHUB_TOKEN
 
 	# Remove any pre-existing screens
-	if ! screen -list | grep -q $SCREEN_NAME
+	if screen -list | grep -q $SCREEN_NAME
 	then
 		echo "thre is stuff"
 		screen -S $SCREEN_NAME -X stuff "^C"
 	else
 		echo "thre is no stuff"
-		screen -S $SCREEN_NAME
+		screen -m -S $SCREEN_NAME
 	fi
 
 	# Make a new screen and attach to it
