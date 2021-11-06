@@ -14,10 +14,10 @@ start() {
 	if screen -list | grep -q $SCREEN_NAME
 	then
 		echo "thre is stuff"
-		screen -S $SCREEN_NAME -X stuff "^C"
+		screen -d -S $SCREEN_NAME -X stuff "^C"
 	else
 		echo "thre is no stuff"
-		screen -m -S $SCREEN_NAME
+		screen -d -m -S $SCREEN_NAME
 	fi
 
 	# Make a new screen and attach to it
