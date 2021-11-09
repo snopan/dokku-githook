@@ -155,12 +155,20 @@ func main() {
 	}
 	log.Print("Loaded local deploys data")
 
+
+	// For each app do an initial deploy
+	log.Print("Making a inital deploy for all apps that have deploy setup")
+	for app := range deployDict {
+		deployApp(app, deployDict[app])
+	}
+	log.Print("Successfully deployed all apps!")
+
 	// For each hook, start listening for github requests
 	for _, hook := range hookArr {
 		http.HandleFunc(fmt.Sprintf("/%s", hook), func(w http.ResponseWriter, r *http.Request) {
 
 			// When request comes in, find all the apps linked to the hook
-			log.Print(fmt.Sprintf(`Hook "%s" was triggered`, hook))
+			log.Printf(`Hook "%s" was triggered`, hook)
 			appArr := linkDict[hook]
 			for _, app := range appArr {
 
@@ -171,6 +179,6 @@ func main() {
 	}
 
 	// Start the http server
-	log.Print(fmt.Sprintf("Starting the http server on port %s!", os.Getenv("GITHUB_HOOK_PORT")))
+	log.Printf("Starting the http server on port %s!", os.Getenv("GITHUB_HOOK_PORT"))
 	http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("GITHUB_HOOK_PORT")), nil)
 }
