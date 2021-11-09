@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -106,6 +107,34 @@ func readLocalDeploysData() (map[string]string, error) {
 	return deploys, nil
 }
 
+func deployApp(app string, repository string) {
+	cmd := exec.Command("dokku", "--build", "git:sync", app, repository)
+
+	// Pipe the output of the command to stdout
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		log.Fatalf("fatal error piping command output: %s", err)
+	}
+
+	// Start the command
+	if err := cmd.Start(); err != nil {
+		log.Fatalf("fatal error running command: %s", err)
+	}
+
+	// Read the data from stdout
+	data, err := ioutil.ReadAll(stdout)
+	if err != nil {
+		log.Fatalf("fatal error reading command output: %s", err)
+	}
+
+	// Wait until the command is finished
+	if err := cmd.Wait(); err != nil {
+		log.Fatalf("fatal error waiting for command to finish: %s", err)
+	}
+
+	log.Print(fmt.Sprintf(`App deployment log for "%s"\n %s`, app, string(data)))	
+}
+
 func main() {
 	// Read all the local data
 	hookArr, err := readLocalHooksData()
@@ -129,16 +158,14 @@ func main() {
 	// For each hook, start listening for github requests
 	for _, hook := range hookArr {
 		http.HandleFunc(fmt.Sprintf("/%s", hook), func(w http.ResponseWriter, r *http.Request) {
+
 			// When request comes in, find all the apps linked to the hook
 			log.Print(fmt.Sprintf(`Hook "%s" was triggered`, hook))
 			appArr := linkDict[hook]
 			for _, app := range appArr {
 
 				// Then deploy each app
-				log.Print(fmt.Sprintf(`App "%s" is being deployed`, app))
-				cmd := exec.Command("dokku", "--build", "git:sync", app, deployDict[app])
-				cmd.Run()
-				log.Print(fmt.Sprintf(`App "%s" is deployed!`, app))
+				deployApp(app, deployDict[app])
 			}
 		})
 	}
