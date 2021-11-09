@@ -122,17 +122,16 @@ func deployApp(app string, repository string) {
 	}
 
 	// Read the data from stdout
-	data, err := ioutil.ReadAll(stdout)
-	if err != nil {
-		log.Fatalf("fatal error reading command output: %s", err)
-	}
+	scanner := bufio.NewScanner(stdout)
 
-	// Wait until the command is finished
-	if err := cmd.Wait(); err != nil {
+	// Print each line
+	log.Print(fmt.Sprintf(`App deployment log for "%s"`, app))	
+	for scanner.Scan() {
+		log.Print(scanner.Text())
+	}
+	if err := scanner.Err(); err != nil {
 		log.Fatalf("fatal error waiting for command to finish: %s", err)
 	}
-
-	log.Print(fmt.Sprintf(`App deployment log for "%s"\n %s`, app, string(data)))	
 }
 
 func main() {
