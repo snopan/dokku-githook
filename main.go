@@ -107,7 +107,7 @@ func readLocalDeploysData() (map[string]string, error) {
 }
 
 func deployApp(app string, repository string) {
-	cmd := exec.Command("dokku", "--build", "git:sync", app, repository)
+	cmd := exec.Command("dokku","git:sync", "--build", app, repository)
 
 	// Pipe the output of the command to stdout
 	stdout, err := cmd.StdoutPipe()
@@ -131,6 +131,8 @@ func deployApp(app string, repository string) {
 	if err := scanner.Err(); err != nil {
 		log.Fatalf("fatal error waiting for command to finish: %s", err)
 	}
+
+	log.Printf(`App "%s" has been deployed!`, app)
 }
 
 func main() {
