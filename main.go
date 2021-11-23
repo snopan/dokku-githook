@@ -6,7 +6,9 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"bytes"
 	"os/exec"
+	"io"
 	"strings"
 )
 
@@ -109,30 +111,25 @@ func readLocalDeploysData() (map[string]string, error) {
 func deployApp(app string, repository string) {
 	cmd := exec.Command("dokku","git:sync", "--build", app, repository)
 
-	// Pipe the output of the command to stdout
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		log.Fatalf("fatal error piping command output: %s", err)
-	}
+	// Write the stdout and stderr output of the command to separate buffers
+	var stdoutBuf, stderrBuff bytes.Buffer
+	cmd.Stdout = io.MultiWriter(&stderrBuff)
+	cmd.Stderr = io.MultiWriter(&stderrBuff)
 
 	// Start the command
-	if err := cmd.Start(); err != nil {
+	if err := cmd.Run(); err != nil {
 		log.Fatalf("fatal error running command: %s", err)
 	}
 
-	// Read the data from stdout
-	scanner := bufio.NewScanner(stdout)
+	// Read the data from stdout and stderr
+	outStr, errStr := string(stdoutBuf.Bytes()), string(stderrBuff.Bytes())
+	log.Printf("%s\n %s\n", outStr, errStr)
 
-	// Print each line
-	log.Print(fmt.Sprintf(`App deployment log for "%s"`, app))	
-	for scanner.Scan() {
-		log.Print(scanner.Text())
+	if len(errStr) == 0 {
+		log.Printf(`App "%s" has been deployed!`, app)
+	} else {
+		log.Printf("fatal error deploying app: %s", errStr)
 	}
-	if err := scanner.Err(); err != nil {
-		log.Fatalf("fatal error waiting for command to finish: %s", err)
-	}
-
-	log.Printf(`App "%s" has been deployed!`, app)
 }
 
 func main() {
