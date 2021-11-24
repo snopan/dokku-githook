@@ -113,8 +113,8 @@ func deployApp(app string, repository string) {
 
 	// Write the stdout and stderr output of the command to separate buffers
 	var stdoutBuff, stderrBuff bytes.Buffer
-	cmd.Stdout = io.MultiWriter(&stdoutBuff)
-	cmd.Stderr = io.MultiWriter(&stderrBuff)
+	cmd.Stdout = io.MultiWriter(os.Stdout, &stdoutBuff)
+	cmd.Stderr = io.MultiWriter(os.Stderr, &stderrBuff)
 
 	// Start the command
 	if err := cmd.Run(); err != nil {
