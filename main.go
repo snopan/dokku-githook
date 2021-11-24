@@ -112,8 +112,8 @@ func deployApp(app string, repository string) {
 	cmd := exec.Command("dokku","git:sync", "--build", app, repository)
 
 	// Write the stdout and stderr output of the command to separate buffers
-	var stdoutBuf, stderrBuff bytes.Buffer
-	cmd.Stdout = io.MultiWriter(&stderrBuff)
+	var stdoutBuff, stderrBuff bytes.Buffer
+	cmd.Stdout = io.MultiWriter(&stdoutBuff)
 	cmd.Stderr = io.MultiWriter(&stderrBuff)
 
 	// Start the command
@@ -122,7 +122,7 @@ func deployApp(app string, repository string) {
 	}
 
 	// Read the data from stdout and stderr
-	outStr, errStr := string(stdoutBuf.Bytes()), string(stderrBuff.Bytes())
+	outStr, errStr := string(stdoutBuff.Bytes()), string(stderrBuff.Bytes())
 	log.Printf("%s\n %s\n", outStr, errStr)
 
 	if len(errStr) == 0 {
