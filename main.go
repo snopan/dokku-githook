@@ -109,7 +109,7 @@ func readLocalDeploysData() (map[string]string, error) {
 }
 
 func deployApp(app string, repository string) {
-	cmd := exec.Command("dokku", "git:sync", "--build", app, repository)
+	cmd := exec.Command("bash", "dokku", "git:sync", "--build", app, repository)
 
 	// Write the stdout and stderr output of the command to separate buffers
 	stdout, err := cmd.StdoutPipe()
