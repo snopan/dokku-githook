@@ -34,3 +34,4 @@ createDeploy() {
 }
 
 createDeploy "$@"
+systemctl restart github-hook

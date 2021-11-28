@@ -33,3 +33,4 @@ removeDeploy() {
 }
 
 removeDeploy "$@"
+systemctl restart github-hook

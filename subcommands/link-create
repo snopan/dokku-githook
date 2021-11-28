@@ -45,3 +45,4 @@ createLink() {
 }
 
 createLink "$@"
+systemctl restart github-hook

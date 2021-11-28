@@ -57,3 +57,4 @@ removeGithubHook() {
 }
 
 removeHook "$@"
+systemctl restart github-hook

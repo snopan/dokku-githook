@@ -28,3 +28,34 @@ mkdir "$PLUGIN_PATH/data"
 echo -n > "$PLUGIN_PATH/data/hooks"
 echo -n > "$PLUGIN_PATH/data/deploys"
 echo -n > "$PLUGIN_PATH/data/links"
+
+# Define the systemd service
+read -r -d  '' GITHUB_HOOK_SERVICE <<EOF
+[Unit]
+Description=Github hook service that listens for hook request and deploys dokku apps
+ConditionPathExist=$PLUGIN_PATH/main.go
+After=network.target
+
+[Service]
+Type=simple
+User=dokku
+Group=dokku
+LimitNOFILE=1024
+
+WorkingDirectory=$PLUGIN_PATH
+ExecStart="~/go/bin/go run ./main.go"
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=github-hook-service
+
+[Install]
+WantedBy=multi-user.target
+EOF
+>>
+
+# Write teh systemd service to file
+echo "$GITHUB_HOOK_SERVICE" > /etc/systemd/system/github-hook.service 
+
+# Enable the service
+systemctl daemon-reload
+systemctl enable --now github-hook
