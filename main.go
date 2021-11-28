@@ -2,8 +2,8 @@ package main
 
 import (
 	"bufio"
-	"bytes"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -111,18 +111,34 @@ func deployApp(app string, repository string) {
 	cmd := exec.Command("dokku", "git:sync", "--build", app, repository)
 
 	// Write the stdout and stderr output of the command to separate buffers
-	var stdoutBuff, stderrBuff bytes.Buffer
-	cmd.Stdout = &stdoutBuff
-	cmd.Stderr = &stderrBuff
-
-	// Start the command
-	if err := cmd.Run(); err != nil {
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		log.Fatalf("fatal error running command: %s", err)
+	}
+	stderr, err := cmd.StderrPipe()
+	if err != nil {
 		log.Fatalf("fatal error running command: %s", err)
 	}
 
+	// Start the command
+	if err := cmd.Start(); err != nil {
+		log.Fatalf("fatal error running command: %s", err)
+	}
+
+	// Read from output
+	var result strings.Builder
+	io.Copy(&result, stdout)
+
+	var errResult strings.Builder
+	io.Copy(&errResult, stderr)
+
+	if err := cmd.Wait(); err != nil {
+		log.Fatalf("error: %s", err)
+	}
+
 	// Read the data from stdout and stderr
-	outStr, errStr := stdoutBuff.String(), stderrBuff.String()
-	log.Printf("%s\n %s\n", outStr, errStr)
+	outStr, errStr := result.String(), errResult.String()
+	log.Printf("out: %s\nerr: %s\n", outStr, errStr)
 
 	if len(errStr) == 0 {
 		log.Printf(`App "%s" has been deployed!`, app)
