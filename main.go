@@ -2,13 +2,12 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
-	"bytes"
 	"os/exec"
-	"io"
 	"strings"
 )
 
@@ -109,12 +108,12 @@ func readLocalDeploysData() (map[string]string, error) {
 }
 
 func deployApp(app string, repository string) {
-	cmd := exec.Command("dokku","git:sync", "--build", app, repository)
+	cmd := exec.Command("dokku", "git:sync", "--build", app, repository)
 
 	// Write the stdout and stderr output of the command to separate buffers
 	var stdoutBuff, stderrBuff bytes.Buffer
-	cmd.Stdout = io.MultiWriter(os.Stdout, &stdoutBuff)
-	cmd.Stderr = io.MultiWriter(os.Stderr, &stderrBuff)
+	cmd.Stdout = &stdoutBuff
+	cmd.Stderr = &stderrBuff
 
 	// Start the command
 	if err := cmd.Run(); err != nil {
@@ -122,7 +121,7 @@ func deployApp(app string, repository string) {
 	}
 
 	// Read the data from stdout and stderr
-	outStr, errStr := string(stdoutBuff.Bytes()), string(stderrBuff.Bytes())
+	outStr, errStr := stdoutBuff.String(), stderrBuff.String()
 	log.Printf("%s\n %s\n", outStr, errStr)
 
 	if len(errStr) == 0 {
@@ -152,7 +151,6 @@ func main() {
 	}
 	log.Print("Loaded local deploys data")
 
-
 	// For each app do an initial deploy
 	log.Print("Making a inital deploy for all apps that have deploy setup")
 	for app := range deployDict {
@@ -163,12 +161,10 @@ func main() {
 	// For each hook, start listening for github requests
 	for _, hook := range hookArr {
 		http.HandleFunc(fmt.Sprintf("/%s", hook), func(w http.ResponseWriter, r *http.Request) {
-
 			// When request comes in, find all the apps linked to the hook
 			log.Printf(`Hook "%s" was triggered`, hook)
 			appArr := linkDict[hook]
 			for _, app := range appArr {
-
 				// Then deploy each app
 				deployApp(app, deployDict[app])
 			}
