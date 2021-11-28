@@ -16,7 +16,7 @@ start() {
 
 	# Make a new screen
 	echo "Starting up github hook server now..."
-	screen -dmS $SCREEN_NAME
+	screen -S $SCREEN_NAME
 
 	# Run golang server in the screen
 	# screen -S $SCREEN_NAME -X stuff 'cd '$PLUGIN_PATH'\n'
