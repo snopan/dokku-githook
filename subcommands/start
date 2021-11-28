@@ -21,7 +21,8 @@ start() {
 	# Run golang server in the screen
 	# screen -S $SCREEN_NAME -X stuff 'cd '$PLUGIN_PATH'\n'
 	# screen -S $SCREEN_NAME -X stuff '~/go/bin/go run ./main.go\n'
-	screen -S $SCREEN_NAME -X stuff '~/go/bin/go run /home/dokku/gotest/main.go \n'
+	screen -S $SCREEN_NAME -X stuff 'cd ~'
+	screen -S $SCREEN_NAME -X stuff '~/go/bin/go run /home/dokku/gotest/main.go'
 
 	echo "Server is up!"
 }
