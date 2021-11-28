@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"sync"
 )
 
 const PLUGIN_NAME = "github-hook"
@@ -126,11 +127,22 @@ func deployApp(app string, repository string) {
 	}
 
 	// Read from output
-	var result strings.Builder
-	io.Copy(&result, stdout)
 
-	var errResult strings.Builder
-	io.Copy(&errResult, stderr)
+	var wg sync.WaitGroup
+	var result, errResult strings.Builder
+	wg.Add(2)
+
+	go func() {
+		defer wg.Done()
+		io.Copy(&result, stdout)
+	}()
+
+	go func() {
+		defer wg.Done()
+		io.Copy(&errResult, stderr)
+	}()
+
+	wg.Wait()
 
 	if err := cmd.Wait(); err != nil {
 		log.Fatalf("error: %s", err)
