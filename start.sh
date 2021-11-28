@@ -1,1 +1,3 @@
-~/go/bin/go run ./main.go
+#!/bin/bash
+
+/home/dokku/go/bin/go run ./main.go
