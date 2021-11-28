@@ -51,7 +51,6 @@ SyslogIdentifier=github-hook-service
 [Install]
 WantedBy=multi-user.target
 EOF
->>
 
 # Write teh systemd service to file
 echo "$GITHUB_HOOK_SERVICE" > /etc/systemd/system/github-hook.service 
