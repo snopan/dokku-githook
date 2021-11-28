@@ -202,5 +202,7 @@ func main() {
 
 	// Start the http server
 	log.Printf("Starting the http server on port %s!", os.Getenv("GITHUB_HOOK_PORT"))
-	http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("GITHUB_HOOK_PORT")), nil)
+	if err := http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("GITHUB_HOOK_PORT")), nil); err != nil {
+		log.Fatalf("error starting server: %s", err)
+	}
 }
