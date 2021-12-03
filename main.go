@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"io"
 	"log"
@@ -14,52 +15,70 @@ import (
 
 const PLUGIN_NAME = "github-hook"
 
-func readLocalHooksData() ([]string, error) {
-	hooks := make([]string, 0)
+type LocalData struct {
+	hooks   []string
+	links   map[string][]string
+	deploys map[string]string
 
-	// Retrieve hooks from the local data storage
-	// hookPath := fmt.Sprintf("%s/%s/data/hooks", os.Getenv("PLUGIN_AVAILABLE_PATH"), PLUGIN_NAME)
-	hookFile, err := os.Open("./data/hooks")
+	mu sync.Mutex
+}
+
+var localData = &LocalData{}
+
+func readLocalDataLines(filename string) ([]string, error) {
+	var output []string
+
+	// Load the file
+	file, err := os.Open(fmt.Sprintf("./data/%s", filename))
 	if err != nil {
-		return hooks, fmt.Errorf("error loading hooks: %w", err)
+		return output, fmt.Errorf("error opening file: %w", err)
 	}
 
-	// Loop through each line and retrieve the hook
-	hookScanner := bufio.NewScanner(hookFile)
-	for hookScanner.Scan() {
+	// Read line by line and append it to a string slice
+	fileScanner := bufio.NewScanner(file)
+	for fileScanner.Scan() {
+		output = append(output, fileScanner.Text())
+	}
 
-		// Each line is in the format "hook webhookId repositoryShort"
-		hookLine := hookScanner.Text()
-		hookArr := strings.Fields(hookLine)
+	// Check if the file scanner has failed
+	if err := fileScanner.Err(); err != nil {
+		return output, fmt.Errorf("error scanning file: %w", err)
+	}
+
+	return output, nil
+}
+
+func readLocalHooksData() ([]string, error) {
+	var hooks []string
+
+	// Read the hooks file
+	hookLines, err := readLocalDataLines("hooks")
+	if err != nil {
+		return hooks, fmt.Errorf("error loading hooks file: %w", err)
+	}
+
+	// Parse each line and store the data
+	for _, hl := range hookLines {
+		hookArr := strings.Fields(hl)
 		hook := hookArr[0]
-
-		// Store the hook
 		hooks = append(hooks, hook)
-	}
-	if hookScanner.Err() != nil {
-		return hooks, fmt.Errorf("error parsing hooks: %w", err)
 	}
 
 	return hooks, nil
 }
 
 func readLocalLinksData() (map[string][]string, error) {
-	links := make(map[string][]string)
+	var links map[string][]string
 
-	// Retrieve links from the local data storage
-	// linkPath := fmt.Sprintf("%s/%s/data/links", os.Getenv("PLUGIN_AVAILABLE_PATH"), PLUGIN_NAME)
-	linkFile, err := os.Open("./data/links")
+	// Read the links file
+	linkLines, err := readLocalDataLines("links")
 	if err != nil {
-		return links, fmt.Errorf("error loading links: %w", err)
+		return links, fmt.Errorf("error loading links file: %w", err)
 	}
 
-	// Loop through each line and retrieve the hook and app
-	linkScanner := bufio.NewScanner(linkFile)
-	for linkScanner.Scan() {
-
-		// Each line is in the format "hook app"
-		linkLine := linkScanner.Text()
-		linkArr := strings.Fields(linkLine)
+	// Parse each line and store the data
+	for _, ll := range linkLines {
+		linkArr := strings.Fields(ll)
 		hook := linkArr[0]
 		app := linkArr[1]
 
@@ -71,138 +90,153 @@ func readLocalLinksData() (map[string][]string, error) {
 		// Store hook as key and app in an array as value
 		links[hook] = append(links[hook], app)
 	}
-	if linkScanner.Err() != nil {
-		return links, fmt.Errorf("error parsing links: %w", err)
-	}
 
 	return links, nil
 }
 
 func readLocalDeploysData() (map[string]string, error) {
-	deploys := make(map[string]string)
+	var deploys map[string]string
 
-	// Retrieve deploys from the local data storage
-	// deployPath := fmt.Sprintf("%s/%s/data/deploys", os.Getenv("PLUGIN_AVAILABLE_PATH"), PLUGIN_NAME)
-	deployFile, err := os.Open("./data/deploys")
+	// Read the links file
+	deployLines, err := readLocalDataLines("deploys")
 	if err != nil {
-		return deploys, fmt.Errorf("error loading deploys: %w", err)
+		return deploys, fmt.Errorf("error loading deploys file: %w", err)
 	}
 
-	// Loop through each line and retrieve the app and repository
-	deployScanner := bufio.NewScanner(deployFile)
-	for deployScanner.Scan() {
-
-		// Each line is in the format "app repository"
-		deployLine := deployScanner.Text()
-		deployArr := strings.Fields(deployLine)
+	// Parse each line and store the data
+	for _, dl := range deployLines {
+		deployArr := strings.Fields(dl)
 		app := deployArr[0]
 		repository := deployArr[1]
-
-		// Store app as key and repository as value
 		deploys[app] = repository
-	}
-	if deployScanner.Err() != nil {
-		return deploys, fmt.Errorf("error parsing links: %w", err)
 	}
 
 	return deploys, nil
 }
 
-func deployApp(app string, repository string) {
-	cmd := exec.Command("bash", "dokku", "git:sync", "--build", app, repository)
-	fmt.Println(cmd.String())
+func deployApp(app string, repository string) error {
+	cmd := exec.Command("dokku", "git:sync", "--build", app, repository)
 
 	// Write the stdout and stderr output of the command to separate buffers
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		log.Fatalf("fatal error running command: %s", err)
-	}
-	stderr, err := cmd.StderrPipe()
-	if err != nil {
-		log.Fatalf("fatal error running command: %s", err)
-	}
+	var stdoutBuff, stderrBuff bytes.Buffer
+	cmd.Stdout = io.MultiWriter(os.Stdout, &stdoutBuff)
+	cmd.Stderr = io.MultiWriter(os.Stderr, &stderrBuff)
 
 	// Start the command
-	if err := cmd.Start(); err != nil {
-		log.Fatalf("fatal error running command: %s", err)
-	}
-
-	// Read from output
-
-	var wg sync.WaitGroup
-	var result, errResult strings.Builder
-	wg.Add(2)
-
-	go func() {
-		defer wg.Done()
-		io.Copy(&result, stdout)
-	}()
-
-	go func() {
-		defer wg.Done()
-		io.Copy(&errResult, stderr)
-	}()
-
-	wg.Wait()
-
-	if err := cmd.Wait(); err != nil {
-		log.Fatalf("error: %s", err)
+	if err := cmd.Run(); err != nil {
+		return fmt.Errorf("error running command: %w", err)
 	}
 
 	// Read the data from stdout and stderr
-	outStr, errStr := result.String(), errResult.String()
+	outStr, errStr := stdoutBuff.String(), stderrBuff.String()
 	log.Printf("out: %s\nerr: %s\n", outStr, errStr)
 
+	// Check if stderr exists
 	if len(errStr) == 0 {
-		log.Printf(`App "%s" has been deployed!`, app)
+		log.Printf("App %s has been deployed", app)
+		return nil
 	} else {
-		log.Printf("fatal error deploying app: %s", errStr)
+		return fmt.Errorf("error executing dokku deploy: %s", errStr)
 	}
 }
 
-func main() {
+func (ld *LocalData) loadAll() error {
+	defer ld.mu.Unlock()
+	ld.mu.Lock()
+
 	// Read all the local data
 	hookArr, err := readLocalHooksData()
 	if err != nil {
-		log.Fatalf("fatal error reading local hook data: %s", err)
+		return fmt.Errorf("error reading local hooks data: %w", err)
 	}
-	log.Print("Loaded local hooks data")
-
 	linkDict, err := readLocalLinksData()
 	if err != nil {
-		log.Fatalf("fatal error reading local link data: %s", err)
+		return fmt.Errorf("error reading local links data: %w", err)
 	}
-	log.Print("Loaded local links data")
 
 	deployDict, err := readLocalDeploysData()
 	if err != nil {
-		log.Fatalf("fatal error reading local deploy data: %s", err)
+		return fmt.Errorf("error reading local deploys data: %w", err)
 	}
-	log.Print("Loaded local deploys data")
 
-	// For each app do an initial deploy
-	log.Print("Making a inital deploy for all apps that have deploy setup")
-	for app := range deployDict {
-		deployApp(app, deployDict[app])
+	// Store the local data read
+	ld.hooks = hookArr
+	ld.links = linkDict
+	ld.deploys = deployDict
+	return nil
+}
+
+func (ld *LocalData) deployAll() error {
+	for app := range ld.deploys {
+		if err := deployApp(app, ld.deploys[app]); err != nil {
+			return fmt.Errorf("error deploying app %s: %w", app, err)
+		}
 	}
-	log.Print("Successfully deployed all apps!")
+	return nil
+}
 
-	// For each hook, start listening for github requests
-	for _, hook := range hookArr {
-		http.HandleFunc(fmt.Sprintf("/%s", hook), func(w http.ResponseWriter, r *http.Request) {
-			// When request comes in, find all the apps linked to the hook
+func runHookServer(ld *LocalData) error {
+	var hookServer *http.ServeMux
+
+	hookServer.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		hook := r.URL.Path[1:]
+
+		// Check if the request is for a hook
+		if appArr, ok := ld.links[hook]; ok {
 			log.Printf(`Hook "%s" was triggered`, hook)
-			appArr := linkDict[hook]
+
+			// Then deploy each app
 			for _, app := range appArr {
-				// Then deploy each app
-				deployApp(app, deployDict[app])
+				if err := deployApp(app, ld.deploys[app]); err != nil {
+					log.Printf("error deploying app %s: %s", app, err)
+				}
 			}
-		})
+		}
+	})
+
+	if err := http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("GITHUB_HOOK_PORT")), hookServer); err != nil {
+		return fmt.Errorf("error listening and serving hook server: %w", err)
+	}
+	return nil
+}
+
+func runControlServer(ld *LocalData) error {
+	var controlServer *http.ServeMux
+
+	controlServer.HandleFunc("/update", func(w http.ResponseWriter, r *http.Request) {
+		// Load all the local data
+		if err := localData.loadAll(); err != nil {
+			log.Fatalf("error loading all local data: %s", err)
+		}
+		log.Print("Finished loading all local data")
+	})
+
+	if err := http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("LOCAL_CONTROL_PORT")), controlServer); err != nil {
+		return fmt.Errorf("error listening and serving control server: %w", err)
+	}
+	return nil
+}
+
+func main() {
+	// Load all the local data
+	if err := localData.loadAll(); err != nil {
+		log.Fatalf("error loading all local data: %s", err)
+	}
+	log.Print("Finished loading all local data")
+
+	// Make an inital deploy for all the apps that have deployment set
+	if err := localData.deployAll(); err != nil {
+		log.Fatalf("error deploying all apps: %s", err)
+	}
+	log.Print("Finished deploying all apps")
+
+	// Start hook server
+	if err := runHookServer(localData); err != nil {
+		log.Fatalf("error to starting hook server: %s", err)
 	}
 
-	// Start the http server
-	log.Printf("Starting the http server on port %s!", os.Getenv("GITHUB_HOOK_PORT"))
-	if err := http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("GITHUB_HOOK_PORT")), nil); err != nil {
-		log.Fatalf("error starting server: %s", err)
+	// Start control server
+	if err := runControlServer(localData); err != nil {
+		log.Fatalf("error to starting control server: %s", err)
 	}
 }

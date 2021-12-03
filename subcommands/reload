@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -eo pipefail
+[[ $DOKKU_TRACE ]] && set -x
+
+reload() {
+	curl "localhost:$LOCAL_CONTROL_PORT/update" 	
+}
+
+reload "$@"

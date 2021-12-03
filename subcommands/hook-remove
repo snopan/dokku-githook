@@ -57,4 +57,4 @@ removeGithubHook() {
 }
 
 removeHook "$@"
-systemctl restart github-hook
+source "$PLUGIN_PATH/subcommands/reload"
