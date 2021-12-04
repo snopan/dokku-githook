@@ -175,7 +175,7 @@ func (ld *LocalData) deployAll() error {
 	return nil
 }
 
-func runHookServer(ld *LocalData) error {
+func runHookServer(ld *LocalData) {
 	var hookServer *http.ServeMux
 
 	hookServer.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -195,12 +195,11 @@ func runHookServer(ld *LocalData) error {
 	})
 
 	if err := http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("GITHUB_HOOK_PORT")), hookServer); err != nil {
-		return fmt.Errorf("error listening and serving hook server: %w", err)
+		log.Fatalf("error to starting control server: %s", err)
 	}
-	return nil
 }
 
-func runControlServer(ld *LocalData) error {
+func runControlServer(ld *LocalData) {
 	var controlServer *http.ServeMux
 
 	controlServer.HandleFunc("/update", func(w http.ResponseWriter, r *http.Request) {
@@ -212,9 +211,8 @@ func runControlServer(ld *LocalData) error {
 	})
 
 	if err := http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("LOCAL_CONTROL_PORT")), controlServer); err != nil {
-		return fmt.Errorf("error listening and serving control server: %w", err)
+		log.Fatalf("error to starting control server: %s", err)
 	}
-	return nil
 }
 
 func main() {
@@ -231,12 +229,8 @@ func main() {
 	log.Print("Finished deploying all apps")
 
 	// Start hook server
-	if err := runHookServer(localData); err != nil {
-		log.Fatalf("error to starting hook server: %s", err)
-	}
+	go runHookServer(localData)
 
 	// Start control server
-	if err := runControlServer(localData); err != nil {
-		log.Fatalf("error to starting control server: %s", err)
-	}
+	go runControlServer(localData)
 }
