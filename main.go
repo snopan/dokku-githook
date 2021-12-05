@@ -23,8 +23,6 @@ type LocalData struct {
 	mu sync.Mutex
 }
 
-var localData = &LocalData{}
-
 func readLocalDataLines(filename string) ([]string, error) {
 	var output []string
 
@@ -205,7 +203,7 @@ func runControlServer(ld *LocalData) {
 
 	controlServer.HandleFunc("/update", func(w http.ResponseWriter, r *http.Request) {
 		// Load all the local data
-		if err := localData.loadAll(); err != nil {
+		if err := ld.loadAll(); err != nil {
 			log.Fatalf("error loading all local data: %s", err)
 		}
 		log.Print("Finished loading all local data")
@@ -218,6 +216,8 @@ func runControlServer(ld *LocalData) {
 }
 
 func main() {
+	localData := &LocalData{}
+
 	// Load all the local data
 	if err := localData.loadAll(); err != nil {
 		log.Fatalf("error loading all local data: %s", err)
