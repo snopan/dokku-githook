@@ -234,5 +234,5 @@ func main() {
 	go runHookServer(localData)
 
 	// Start control server
-	go runControlServer(localData)
+	runControlServer(localData)
 }
