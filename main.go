@@ -174,7 +174,7 @@ func (ld *LocalData) deployAll() error {
 }
 
 func runHookServer(ld *LocalData) {
-	var hookServer *http.ServeMux
+	var hookServer http.ServeMux
 
 	hookServer.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		hook := r.URL.Path[1:]
@@ -199,7 +199,7 @@ func runHookServer(ld *LocalData) {
 }
 
 func runControlServer(ld *LocalData) {
-	var controlServer *http.ServeMux
+	var controlServer http.ServeMux
 
 	controlServer.HandleFunc("/update", func(w http.ResponseWriter, r *http.Request) {
 		// Load all the local data
