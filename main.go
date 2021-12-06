@@ -193,7 +193,7 @@ func runHookServer(ld *LocalData) {
 	})
 
 	log.Printf("Starting hook server on port %s", os.Getenv("GITHUB_HOOK_PORT"))
-	if err := http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("GITHUB_HOOK_PORT")), hookServer); err != nil {
+	if err := http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("GITHUB_HOOK_PORT")), &hookServer); err != nil {
 		log.Fatalf("error to starting control server: %s", err)
 	}
 }
@@ -210,7 +210,7 @@ func runControlServer(ld *LocalData) {
 	})
 
 	log.Printf("Starting control server on port %s", os.Getenv("LOCAL_CONTROL_PORT"))
-	if err := http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("LOCAL_CONTROL_PORT")), controlServer); err != nil {
+	if err := http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("LOCAL_CONTROL_PORT")), &controlServer); err != nil {
 		log.Fatalf("error to starting control server: %s", err)
 	}
 }
