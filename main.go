@@ -218,7 +218,7 @@ func runControlServer(ld *LocalData) {
 func main() {
 	localData := &LocalData{}
 
-	log.Println("Arguments:")
+	log.Print("Arguments:")
 	log.Println(os.Args[1:])
 
 	// Load all the local data
