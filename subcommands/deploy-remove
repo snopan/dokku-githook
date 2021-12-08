@@ -33,3 +33,4 @@ removeDeploy() {
 }
 
 removeDeploy "$@"
+source "$PLUGIN_PATH/subcommands/reload"
