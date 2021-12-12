@@ -54,8 +54,8 @@ WantedBy=multi-user.target
 EOF
 
 # Write the systemd service to file
-echo "$GITHUB_HOOK_SERVICE" > /etc/systemd/system/github-hook@.service 
+echo "$GITHUB_HOOK_SERVICE" > /etc/systemd/system/hook@.service 
 
 # Enable the service
 systemctl daemon-reload
-systemctl start github-hook@\"$GITHUB_USERNAME $GITHUB_TOKEN $GITHUB_HOOK_PORT $LOCAL_CONTROL_PORT\".service
+systemctl start hook@"$GITHUB_USERNAME $GITHUB_TOKEN $GITHUB_HOOK_PORT $LOCAL_CONTROL_PORT".service
