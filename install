@@ -44,7 +44,7 @@ LimitNOFILE=1024
 Environment="SCRIPT_ARGS=%I"
 
 WorkingDirectory=$PLUGIN_PATH
-ExecStart="$PLUGIN_PATH/start.sh \$SCRIPT_ARGS"
+ExecStart="$PLUGIN_PATH/start.sh" $SCRIPT_ARGS
 StandardOutput=journal
 StandardError=journal
 SyslogIdentifier=github-hook-service
@@ -54,8 +54,8 @@ WantedBy=multi-user.target
 EOF
 
 # Write the systemd service to file
-echo "$GITHUB_HOOK_SERVICE" > /etc/systemd/system/hook@.service 
+echo "$GITHUB_HOOK_SERVICE" > /etc/systemd/system/github-hook@.service 
 
 # Enable the service
 systemctl daemon-reload
-systemctl start hook@"$GITHUB_USERNAME $GITHUB_TOKEN $GITHUB_HOOK_PORT $LOCAL_CONTROL_PORT".service
+systemctl start github-hook@"$GITHUB_USERNAME $GITHUB_TOKEN $GITHUB_HOOK_PORT $LOCAL_CONTROL_PORT".service
