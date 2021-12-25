@@ -9,5 +9,5 @@ start() {
 	/home/dokku/go/bin/go run ./main.go	$GITHUB_USERNAME $GITHUB_TOKEN
 }
 
-echo $@
+echo "all args $@"
 start "$@"
