@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+
 declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/github-hook"
 
 installGo() {
@@ -38,8 +39,6 @@ echo -n > "$PLUGIN_PATH/data/hooks"
 echo -n > "$PLUGIN_PATH/data/deploys"
 echo -n > "$PLUGIN_PATH/data/links"
 
-echo "made storage"
-
 # Define the systemd service
 read -r -d '' GITHUB_HOOK_SERVICE <<EOF
 [Unit]
@@ -63,8 +62,6 @@ SyslogIdentifier=github-hook-service
 [Install]
 WantedBy=multi-user.target
 EOF
-
-echo "systemd defined"
 
 # Write the systemd service to file
 echo "$GITHUB_HOOK_SERVICE" > /etc/systemd/system/github-hook.service 
