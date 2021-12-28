@@ -88,7 +88,7 @@ func readLocalLinksData() (map[string][]string, error) {
 }
 
 func readLocalDeploysData() (map[string]string, error) {
-	var deploys map[string]string
+	deploys := make(map[string]string)
 
 	// Read the links file
 	deployLines, err := readLocalDataLines("deploys")
