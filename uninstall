@@ -6,6 +6,6 @@ PLUGIN="$1"
 
 if [[ "$PLUGIN" = "github-hook" ]]
 then
-	systemctl stop github-hook.service
+	systemctl stop github-hook.service || true
 	rm /etc/systemd/system/github-hook.service
 fi
