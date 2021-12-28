@@ -80,11 +80,6 @@ func readLocalLinksData() (map[string][]string, error) {
 		hook := linkArr[0]
 		app := linkArr[1]
 
-		// When no apps are stored under a hook, initialize the an array
-		if _, ok := links[hook]; !ok {
-			links[hook] = make([]string, 0)
-		}
-
 		// Store hook as key and app in an array as value
 		links[hook] = append(links[hook], app)
 	}
