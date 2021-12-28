@@ -10,9 +10,10 @@ createDeploy() {
 	# Moves the input down by one so $1 will be the parameters after $cmd
 	[[ $1 == $cmd ]] && shift 1
 
-	# The command format is $cmd $app $repository
+	# The command format is $cmd $app $repoOwner $repoName
 	declare app=$1
-	declare repository=$2
+	declare repoOwner=$2
+	declare repoName=$3
 
 	# Make deploy data operations available
 	source "$PLUGIN_PATH/data-operations/deploys"
@@ -22,7 +23,7 @@ createDeploy() {
 	then
 		if (dokku apps:exists $app)
 		then
-			storeDeploy $app $repository
+			storeDeploy $app "https://github.com/$repoOwner/$repoName"
 			echo "Successfully added deployment repository for app \"$app\""
 		else
 			echo "err: Given app is not created yet with dokku"

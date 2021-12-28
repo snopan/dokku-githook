@@ -13,9 +13,10 @@ createHook() {
 	# Moves the input down by one so $1 will be the parameters after $cmd
 	[[ $1 == $cmd ]] && shift 1
 
-	# The command format is $cmd $hook $repositoryShort
+	# The command format is $cmd $hook $repoOwner $repoName
 	declare hook=$1
-	declare repositoryShort=$2
+	declare repoOwner=$2
+	declare repoName=$3
 
 	# Make hook data operations available
 	source "$PLUGIN_PATH/data-operations/hooks"
@@ -25,11 +26,11 @@ createHook() {
 	then
 
 		# Create the new hook with github
-		if createGithubHook $hook $repositoryShort
+		if createGithubHook $hook $repoOwner $repoName
 		then
 
 			# Once successful, add it to local data
-			storeHook $hook $hookId $repositoryShort
+			storeHook $hook $hookId $repoOwner $repoName
 			echo "Successfully added \"$hook\" as a hook"
 		fi
 	else
@@ -39,7 +40,8 @@ createHook() {
 
 createGithubHook() {
 	declare hook=$1
-	declare repositoryShort=$2
+	declare repoOwner=$2
+	declare repoName=$3
 	declare ip=$(curl "ifconfig.me")
 
 	# Makes a request to github for creating hook
@@ -49,7 +51,7 @@ createGithubHook() {
 	-sS \
 	-u "$GITHUB_USERNAME:$GITHUB_TOKEN" \
 	-H "Accept: application/vnd.github.v3+json" \
-	"https://api.github.com/repos/$repositoryShort/hooks" \
+	"https://api.github.com/repos/$repoOwner/$repoName/hooks" \
 	-d '{"name": "web","config": {"url": "http://'$ip':'$GITHUB_HOOK_PORT'/'$hook'", "insecure_ssl": "1"}}')
 
 	# If request was successful, there will be a hook id returned

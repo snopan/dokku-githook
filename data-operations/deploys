@@ -4,8 +4,8 @@ declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/github-hook"
 
 storeDeploy() {
 	declare app=$1
-	declare repository=$2
-	echo "$app $repository" >> "$PLUGIN_PATH/data/deploys"
+	declare repoLink=$2
+	echo "$app $repoLink" >> "$PLUGIN_PATH/data/deploys"
 }
 
 deployExist() {
@@ -15,7 +15,7 @@ deployExist() {
 	while read deployLine; do
 
 		# Turn each line into array because the format 
-		# is in "$app $repository"
+		# is in "$app $repoLink"
 		declare deployArr=($deployLine)
 		[[ $app == ${deployArr[0]} ]] && return 0
 	done < "$PLUGIN_PATH/data/deploys"

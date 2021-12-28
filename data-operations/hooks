@@ -2,13 +2,15 @@
 
 declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/github-hook"
 declare retrieveHookId=""
-declare retrieveRepositoryShort=""
+declare retrieveRepoOwner=""
+declare retrieveRepoName=""
 
 storeHook() {
 	declare hook=$1
 	declare hookId=$2
-	declare repositoryShort=$3
-	echo "$hook $hookId $repositoryShort" >> "$PLUGIN_PATH/data/hooks"
+	declare repoOwner=$3
+	declare repoName=$4
+	echo "$hook $hookId $repoOwner $repoName" >> "$PLUGIN_PATH/data/hooks"
 }
 
 hookExist() {
@@ -18,7 +20,7 @@ hookExist() {
 	while read hookLine; do
 
 		# Turn each line into array because the format 
-		# is in "$hook $hookId $repositoryShort"
+		# is in "$hook $hookId $repoOwner $repoName"
 		declare hookArr=($hookLine)
 		[[ $hook == ${hookArr[0]} ]] && return 0
 	done < "$PLUGIN_PATH/data/hooks"
@@ -33,7 +35,8 @@ getHookId() {
 		if [[ $hook == ${hookArr[0]} ]] 
 		then
 			retrieveHookId=${hookArr[1]}
-			retrieveRepositoryShort=${hookArr[2]}
+			retrieveRepoOwner=${hookArr[2]}
+			retrieveRepoName=${hookArr[3]}
 			return 0
 		fi
 	done < "$PLUGIN_PATH/data/hooks"

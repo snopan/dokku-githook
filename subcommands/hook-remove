@@ -21,11 +21,11 @@ removeHook() {
 	source "$PLUGIN_PATH/data-operations/links"
 
 	# Checks if hook exist, if so then assign the hookId to
-	# a $retrieveHookId and repositoryShort to $retrieveRepositoryShort
-	# this is defined in the hook data operation
+	# $retrieveHookId, repoOwner to $retrieveRepoOwner and repoName
+	# to $retrieveRepoName, this is defined in the hook data operation
 	if getHookId $hook
 	then
-		removeGithubHook $retrieveHookId $retrieveRepositoryShort
+		removeGithubHook $retrieveHookId $retrieveRepoOwner $retrieveRepoName
 		
 		# Remove the hook from local data and 
 		# any links using the given hook
@@ -40,7 +40,8 @@ removeHook() {
 
 removeGithubHook() {
 	declare hookId=$1
-	declare repositoryShort=$2
+	declare repoOwner=$2
+	declare repoName=$3
 
 	# Makes a request to github for removing hook
 	# Running this assumes GITHUB_USERNAME and GITHUB_TOKEN
@@ -50,7 +51,7 @@ removeGithubHook() {
 	-X DELETE \
 	-u "$GITHUB_USERNAME:$GITHUB_TOKEN" \
 	-H "Accept: application/vnd.github.v3+json" \
-	"https://api.github.com/repos/$repositoryShort/hooks/$hookId")
+	"https://api.github.com/repos/$repoOwner/$repoName/hooks/$hookId")
 
 	if [[ -n $response ]]
 	then
