@@ -42,7 +42,7 @@ echo -n > "$PLUGIN_PATH/data/deploys"
 echo -n > "$PLUGIN_PATH/data/links"
 
 # Define the systemd service
-read -r -d '' GITHUB_HOOK_SERVICE <<EOF
+errormessage=$(read -r -d '' GITHUB_HOOK_SERVICE <<EOF
 [Unit]
 Description=Github hook service that listens for hook request and deploys dokku apps
 ConditionPathExists=$PLUGIN_PATH/main.go
@@ -53,6 +53,7 @@ Type=simple
 User=dokku
 Group=dokku
 LimitNOFILE=1024
+Environment="GITHUB_HOOK_PORT=$GITHUB_HOOK_PORT" "LOCAL_CONTROL_PORT=$LOCAL_CONTROL_PORT"
 
 WorkingDirectory=$PLUGIN_PATH
 ExecStart="$PLUGIN_PATH/start.sh"
@@ -63,7 +64,9 @@ SyslogIdentifier=github-hook-service
 [Install]
 WantedBy=multi-user.target
 EOF
+)
 
+echo $errormessage
 echo "systemd defined"
 
 # Write the systemd service to file
