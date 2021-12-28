@@ -5,7 +5,7 @@ set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
 declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/github-hook"
 
 installGo() {
-	wget https://dl.google.com/go/go1.17. 2.linux-amd64.tar.gz
+	wget https://dl.google.com/go/go1.17.5.linux-amd64.tar.gz
 	tar -xzf go1.17.2.linux-amd64.tar.gz
 	rm go1.17.2.linux-amd64.tar.gz
 	# mv "./go" "$PLUGIN_PATH/"
@@ -42,7 +42,7 @@ echo -n > "$PLUGIN_PATH/data/deploys"
 echo -n > "$PLUGIN_PATH/data/links"
 
 # Define the systemd service
-errormessage=$(read -r -d '' GITHUB_HOOK_SERVICE <<EOF
+read -r -d '' GITHUB_HOOK_SERVICE <<EOF
 [Unit]
 Description=Github hook service that listens for hook request and deploys dokku apps
 ConditionPathExists=$PLUGIN_PATH/main.go
@@ -64,9 +64,7 @@ SyslogIdentifier=github-hook-service
 [Install]
 WantedBy=multi-user.target
 EOF
-)
 
-echo $errormessage
 echo "systemd defined"
 
 # Write the systemd service to file
