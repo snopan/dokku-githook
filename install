@@ -35,18 +35,14 @@ fi
 # Port foward the github hook port
 ufw allow $GITHUB_HOOK_PORT
 
-echo "allowed port"
-
 # Create all storage files
 mkdir "$PLUGIN_PATH/data"
 echo -n > "$PLUGIN_PATH/data/hooks"
 echo -n > "$PLUGIN_PATH/data/deploys"
 echo -n > "$PLUGIN_PATH/data/links"
 
-echo "data files"
-
 # Define the systemd service
-read -r -d  '' GITHUB_HOOK_SERVICE <<EOF
+read -r -d '' GITHUB_HOOK_SERVICE <<EOF
 [Unit]
 Description=Github hook service that listens for hook request and deploys dokku apps
 ConditionPathExists=$PLUGIN_PATH/main.go
@@ -68,8 +64,6 @@ SyslogIdentifier=github-hook-service
 [Install]
 WantedBy=multi-user.target
 EOF
-
-echo "systemd define"
 
 # Write the systemd service to file
 echo "$GITHUB_HOOK_SERVICE" > /etc/systemd/system/github-hook.service 
