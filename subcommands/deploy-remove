@@ -2,6 +2,7 @@
 set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
 
 declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/github-hook"
+source "$PLUGIN_PATH/utils"
 
 removeDeploy() {
 	declare desc="Removes deployment repository for a dokku app"
@@ -26,10 +27,10 @@ removeDeploy() {
 		deleteDeploy $app
 		deleteLinkByApp $app
 		echo "Successfully removed deployment for app \"$app\""
+		reload
 	else
 		echo "err: Given app has no deployment"
 	fi
 }
 
 removeDeploy "$@"
-source "$PLUGIN_PATH/reload"

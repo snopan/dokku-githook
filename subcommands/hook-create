@@ -2,6 +2,8 @@
 set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
 
 declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/github-hook"
+source "$PLUGIN_PATH/utils"
+
 declare hookId=""
 
 createHook() {
@@ -70,5 +72,5 @@ createGithubHook() {
 	fi
 }
 
+checkGithubAuth
 createHook "$@"
-source "$PLUGIN_PATH/reload"

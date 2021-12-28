@@ -1,6 +1,2 @@
-#!/usr/bin/env bash
-reload() {
-	curl "localhost:$LOCAL_CONTROL_PORT/update" 	
-}
 
 reload "$@"

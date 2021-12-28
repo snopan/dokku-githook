@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+checkGithubHookPort() {
+	if [[ -z $GITHUB_HOOK_PORT ]]
+	then
+		echo "No GITHUB_HOOK_PORT defined!" 1>&2
+		exit 1
+	fi
+}
+
+checkLocalControlPort() {
+	if [[ -z $LOCAL_CONTROL_PORT ]]
+	then
+		echo "No LOCAL_CONTROL_PORT defined!" 1>&2
+		exit 1
+	fi	
+}
+
+checkGithubAuth() {
+	if [[ -z $GITHUB_USERNAME ]]
+	then
+		echo "No GITHUB_USERNAME defined!" 1>&2
+		exit 1
+	fi
+	if [[ -z $GITHUB_TOKEN ]]
+	then
+		echo "No GITHUB_TOKEN defined!" 1>&2
+		exit 1
+	fi
+}
+
+reload() {
+	checkLocalControlPort
+	curl "localhost:$LOCAL_CONTROL_PORT/update" 	
+}

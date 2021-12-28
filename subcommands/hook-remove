@@ -2,6 +2,8 @@
 set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
 
 declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/github-hook"
+source "$PLUGIN_PATH/utils"
+
 declare hookId=""
 
 removeHook() {
@@ -30,6 +32,7 @@ removeHook() {
 		deleteHook $hook
 		deleteLinkByHook $hook
 		echo "Successfully removed hook \"$hook\""
+		reload
 	else
 		echo "err: Given hook does not exist"
 	fi
@@ -55,5 +58,5 @@ removeGithubHook() {
 	fi
 }
 
+checkGithubAuth
 removeHook "$@"
-source "$PLUGIN_PATH/reload"

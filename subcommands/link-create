@@ -2,6 +2,7 @@
 set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
 
 declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/github-hook"
+source "$PLUGIN_PATH/utils"
 
 createLink() {
 	declare desc="Creates a link between a dokku app and hook"
@@ -32,6 +33,7 @@ createLink() {
 			then			
 				storeLink $hook $app
 				echo "Successfully linked hook \"$hook\" with app \"$app\""
+				reload
 			else
 				echo "err: Given app does not have deployment"
 			fi
@@ -44,4 +46,3 @@ createLink() {
 }
 
 createLink "$@"
-source "$PLUGIN_PATH/reload"

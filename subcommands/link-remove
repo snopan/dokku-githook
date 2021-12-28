@@ -2,6 +2,7 @@
 set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
 
 declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/github-hook"
+source "$PLUGIN_PATH/utils"
 
 removeDeploy() {
 	declare desc="Removes the link between a dokku app and hook"
@@ -22,10 +23,10 @@ removeDeploy() {
 	then
 		deleteSpecificLink $hook $app
 		echo "Successfully removed link between hook \"$hook\" and app \"$app\""
+		reload
 	else
 		echo "err: Given app and hook combination does not exist"
 	fi
 }
 
 removeDeploy "$@"
-source "$PLUGIN_PATH/reload"
