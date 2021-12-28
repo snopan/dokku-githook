@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
+
+PLUGIN="$1"
+
+if [[ "$PLUGIN" = "github-hook" ]]
+then
+	systemctl stop github-hook.service
+	rm /etc/systemd/system/github-hook.service
+fi
