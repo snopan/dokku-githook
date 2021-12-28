@@ -121,8 +121,7 @@ func deployApp(app string, repository string) error {
 	}
 
 	// Read the data from stdout and stderr
-	outStr, errStr := stdoutBuff.String(), stderrBuff.String()
-	log.Printf("out: %s\nerr: %s\n", outStr, errStr)
+	_, errStr := stdoutBuff.String(), stderrBuff.String()
 
 	// Check if stderr exists
 	if len(errStr) == 0 {
