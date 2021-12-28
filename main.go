@@ -164,15 +164,6 @@ func (ld *LocalData) loadAll() error {
 	return nil
 }
 
-func (ld *LocalData) deployAll() error {
-	for app := range ld.deploys {
-		if err := deployApp(app, ld.deploys[app]); err != nil {
-			return fmt.Errorf("error deploying app %s: %w", app, err)
-		}
-	}
-	return nil
-}
-
 func runHookServer(ld *LocalData) {
 	var hookServer http.ServeMux
 
@@ -223,12 +214,6 @@ func main() {
 		log.Fatalf("error loading all local data: %s", err)
 	}
 	log.Print("Finished loading all local data")
-
-	// Make an inital deploy for all the apps that have deployment set
-	if err := localData.deployAll(); err != nil {
-		log.Fatalf("error deploying all apps: %s", err)
-	}
-	log.Print("Finished deploying all apps")
 
 	// Start hook server
 	go runHookServer(localData)
