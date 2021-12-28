@@ -32,6 +32,9 @@ installGo() {
 	# mv "./go" "$PLUGIN_PATH/"
 }
 
+# Check if any env is not defined, if not then terminate
+checkEnv
+
 # Install golang binaries
 # installGo
 
