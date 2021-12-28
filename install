@@ -16,7 +16,6 @@ installGo() {
 
 # Install other dependencies
 apt update
-apt install screen -y
 apt install ufw -y
 
 # Login to dokku github
