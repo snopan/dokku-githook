@@ -66,7 +66,7 @@ func readLocalHooksData() ([]string, error) {
 }
 
 func readLocalLinksData() (map[string][]string, error) {
-	var links map[string][]string
+	links := make(map[string][]string)
 
 	// Read the links file
 	linkLines, err := readLocalDataLines("links")
