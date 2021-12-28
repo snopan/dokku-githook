@@ -41,6 +41,8 @@ echo -n > "$PLUGIN_PATH/data/hooks"
 echo -n > "$PLUGIN_PATH/data/deploys"
 echo -n > "$PLUGIN_PATH/data/links"
 
+echo "made storage"
+
 # Define the systemd service
 read -r -d '' GITHUB_HOOK_SERVICE <<EOF
 [Unit]
