@@ -67,6 +67,7 @@ EOF
 
 # Write the systemd service to file
 echo "$GITHUB_HOOK_SERVICE" > /etc/systemd/system/github-hook.service 
+echo "written service"
 
 # Enable the service
 systemctl daemon-reload
