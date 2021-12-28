@@ -53,7 +53,6 @@ Type=simple
 User=dokku
 Group=dokku
 LimitNOFILE=1024
-Environment="GITHUB_HOOK_PORT=$GITHUB_HOOK_PORT" "LOCAL_CONTROL_PORT=$LOCAL_CONTROL_PORT"
 
 WorkingDirectory=$PLUGIN_PATH
 ExecStart="$PLUGIN_PATH/start.sh"
