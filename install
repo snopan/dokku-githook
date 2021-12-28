@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-
 declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/github-hook"
 
 installGo() {

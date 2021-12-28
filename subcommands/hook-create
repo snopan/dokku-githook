@@ -71,4 +71,4 @@ createGithubHook() {
 }
 
 createHook "$@"
-source "$PLUGIN_PATH/subcommands/reload"
+source "$PLUGIN_PATH/reload"
