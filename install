@@ -3,7 +3,7 @@
 declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/github-hook"
 
 installGo() {
-	wget https://dl.google.com/go/go1.17.2.linux-amd64.tar.gz
+	wget https://dl.google.com/go/go1.17. 2.linux-amd64.tar.gz
 	tar -xzf go1.17.2.linux-amd64.tar.gz
 	rm go1.17.2.linux-amd64.tar.gz
 	# mv "./go" "$PLUGIN_PATH/"
@@ -20,7 +20,17 @@ apt install ufw -y
 # Login to dokku github
 dokku git:auth github.com $GITHUB_USERNAME $GITHUB_TOKEN
 
-# Allow the port
+# Set port to default if no port is given
+if [[ -z $GITHUB_HOOK_PORT ]]
+then
+	export GITHUB_HOOK_PORT=9000
+fi
+if [[ -z $LOCAL_CONTROL_PORT ]]
+then
+	export LOCAL_CONTROL_PORT=9090
+fi
+
+# Port foward the github hook port
 ufw allow $GITHUB_HOOK_PORT
 
 # Create all storage files
@@ -41,10 +51,10 @@ Type=simple
 User=dokku
 Group=dokku
 LimitNOFILE=1024
-Environment="SCRIPT_ARGS=%I"
+Environment="GITHUB_HOOK_PORT=$GITHUB_HOOK_PORT" "LOCAL_CONTROL_PORT=$LOCAL_CONTROL_PORT"
 
 WorkingDirectory=$PLUGIN_PATH
-ExecStart="$PLUGIN_PATH/start.sh \$SCRIPT_ARGS"
+ExecStart="$PLUGIN_PATH/start.sh"
 StandardOutput=journal
 StandardError=journal
 SyslogIdentifier=github-hook-service
@@ -54,8 +64,8 @@ WantedBy=multi-user.target
 EOF
 
 # Write the systemd service to file
-echo "$GITHUB_HOOK_SERVICE" > /etc/systemd/system/github-hook@.service 
+echo "$GITHUB_HOOK_SERVICE" > /etc/systemd/system/github-hook.service 
 
 # Enable the service
 systemctl daemon-reload
-systemctl start github-hook@"$GITHUB_USERNAME".service
+systemctl start github-hook.service
