@@ -24,7 +24,6 @@ createDeploy() {
 		then
 			storeDeploy $app $repository
 			echo "Successfully added deployment repository for app \"$app\""
-			reload
 		else
 			echo "err: Given app is not created yet with dokku"
 		fi
