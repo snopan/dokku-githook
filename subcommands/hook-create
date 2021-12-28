@@ -20,7 +20,7 @@ createHook() {
 	source "$PLUGIN_PATH/data-operations/hooks"
 
 	# Check if the hook exist in local data
-	if ! hookExist $hook
+	if !hookExist $hook
 	then
 
 		# Create the new hook with github

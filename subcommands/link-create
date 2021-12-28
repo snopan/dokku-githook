@@ -21,7 +21,7 @@ createLink() {
 	source "$PLUGIN_PATH/data-operations/links"
 
 	# Check if the specific link combination exist in local data
-	if ! linkExist $hook $app
+	if !linkExist $hook $app
 	then
 
 		# Check if the given hook exist in local data
