@@ -218,9 +218,6 @@ func runControlServer(ld *LocalData) {
 func main() {
 	localData := &LocalData{}
 
-	log.Print("Arguments:")
-	log.Println(os.Args[1:])
-
 	// Load all the local data
 	if err := localData.loadAll(); err != nil {
 		log.Fatalf("error loading all local data: %s", err)
