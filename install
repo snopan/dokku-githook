@@ -5,7 +5,7 @@ source "$PLUGIN_PATH/utils"
 
 installGo() {
 	wget https://dl.google.com/go/go1.17.5.linux-amd64.tar.gz
-	tar -xzf go1.17.2.linux-amd64.tar.gz
+	tar -xzf go1.17.5.linux-amd64.tar.gz
 	rm go1.17.2.linux-amd64.tar.gz
 	ls
 	mv ./go $PLUGIN_PATH
