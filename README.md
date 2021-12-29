@@ -11,7 +11,7 @@ Then deploy is just a definition of what github repository to use when deploying
 
 Lastly there are links which as the name implies, links the two hook and deploy so whenever a hook is triggered the dokku app will also be deployed.
 
-The main reason for having these three entites was to allow webhook of any repository to trigger any number of dokku app deployments and they can be of other repositories, this allows the plugin to be much more flexible and powerful.
+The main reason for having these three entites was to allow webhook of any repository to trigger any number of dokku app deployments and they can be of other repositories, this allows the plugin to be much more flexible.
 
 The servers are written in golang and starts in the background as systemd services upon installation. The plugin also hosts a local http server for reload calls, while it's not exposed publicaly it will still take a port.
 
