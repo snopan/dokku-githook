@@ -8,8 +8,8 @@ source "$PLUGIN_PATH/utils"
 PLUGIN="$1"
 
 removeService() {
-	systemctl stop github-hook.service || true
-	rm /etc/systemd/system/github-hook.service || true
+	systemctl stop github-hook.service
+	rm /etc/systemd/system/github-hook.service
 	echo "Removed github-hook.service"
 }
 
@@ -27,6 +27,6 @@ removeAllHooks() {
 
 if [[ "$PLUGIN" = "github-hook" ]]
 then
-	removeService
-	removeAllHooks
+	removeService || true
+	removeAllHooks || true
 fi
