@@ -2,11 +2,31 @@
 
 set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
 
+declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/github-hook"
+source "$PLUGIN_PATH/utils"
+
 PLUGIN="$1"
 
-if [[ "$PLUGIN" = "github-hook" ]]
-then
+removeService() {
 	systemctl stop github-hook.service || true
 	rm /etc/systemd/system/github-hook.service || true
 	echo "Removed github-hook.service"
+}
+
+removeAllHooks() {
+	while read hookLine; do
+		declare hookArr=($hookLine)
+		declare hookId=${hookArr[1]}
+		declare repoOwner=${hookArr[2]}
+		declare repoName=${hookArr[3]}
+		removeGithubHook hookId repoOwner repoName
+		echo "Removing hook $hookId"
+	done < "$PLUGIN_PATH/data/hooks"
+	echo "Removed all hooks"
+}
+
+if [[ "$PLUGIN" = "github-hook" ]]
+then
+	removeService
+	removeAllHooks
 fi

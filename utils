@@ -33,3 +33,24 @@ reload() {
 	checkLocalControlPort
 	curl "localhost:$LOCAL_CONTROL_PORT/update" 	
 }
+
+removeGithubHook() {
+	declare hookId=$1
+	declare repoOwner=$2
+	declare repoName=$3
+
+	# Makes a request to github for removing hook
+	# Running this assumes GITHUB_USERNAME and GITHUB_TOKEN
+	# is available in the environment variables
+	declare response=$(curl \
+	-sS \
+	-X DELETE \
+	-u "$GITHUB_USERNAME:$GITHUB_TOKEN" \
+	-H "Accept: application/vnd.github.v3+json" \
+	"https://api.github.com/repos/$repoOwner/$repoName/hooks/$hookId")
+
+	if [[ -n $response ]]
+	then
+		echo "github err: $(echo $response | jq '.message')"
+	fi
+}
