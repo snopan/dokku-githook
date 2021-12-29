@@ -19,7 +19,7 @@ removeAllHooks() {
 		declare hookId=${hookArr[1]}
 		declare repoOwner=${hookArr[2]}
 		declare repoName=${hookArr[3]}
-		removeGithubHook hookId repoOwner repoName
+		removeGithubHook $hookId $repoOwner $repoName
 		echo "Removing hook $hookId"
 	done < "$PLUGIN_PATH/data/hooks"
 	echo "Removed all hooks"
