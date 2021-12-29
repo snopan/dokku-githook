@@ -4,9 +4,10 @@ declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/github-hook"
 source "$PLUGIN_PATH/utils"
 
 installGo() {
-	wget https://dl.google.com/go/go1.17.5.linux-amd64.tar.gz
-	tar -xzf go1.17.5.linux-amd64.tar.gz
-	rm go1.17.2.linux-amd64.tar.gz
+	declare goVersion="1.17.5"
+	wget "https://dl.google.com/go/go$goVersion.linux-amd64.tar.gz"
+	tar -xzf "go$goVersion.linux-amd64.tar.gz"
+	rm "go$goVersion.linux-amd64.tar.gz"
 	mv ./go $PLUGIN_PATH
 }
 
