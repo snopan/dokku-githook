@@ -3,9 +3,19 @@
 The plugin allows github webhook deploys similar to what heroku offers. Where each commit to main can trigger a deploy to a dokku app. This plugin only works with repository on [Github](https://github.com).
 
 ## How it works
-The plugin creates a webhook on a github repository and listens for this hook in a simple http server. Users can then link the hook to a dokku app for auto deployment. The dokku app must have a deploy repository provided first before it can be linked to a hook.
+There are three main entities <strong>hook, deploy and link</strong>.
 
-The plugin also hosts a local http server for reload calls, while it's not exposed publicaly it will still take a port.
+To put it simply, a hook is just a webhook defined on a github repository and whenever a commit is pushed onto that repository, github will send a request to our http server. The plugin commands also takes care of the creation of webhook on github so no need worry about that.
+
+Then deploy is just a definition of what github repository to use when deploying for a certain dokku app. It's fairly straight foward.
+
+Lastly there are links which as the name implies, links the two hook and deploy so whenever a hook is triggered the dokku app will also be deployed.
+
+The main reason for having these three entites was to allow different hooks to link up to multiple deployments making it much more flexible.
+
+The servers are written in golang and starts in the background as systemd services upon installation. The plugin also hosts a local http server for reload calls, while it's not exposed publicaly it will still take a port.
+
+During uninstallation, the plugin will stop and remove the systemd service and make request to github to remove all the created webhooks.
 
 ## Getting Started
 First export all the environment varibles that are required.
