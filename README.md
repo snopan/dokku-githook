@@ -15,7 +15,7 @@ The main reason for having these three entites was to allow different hooks to l
 
 The servers are written in golang and starts in the background as systemd services upon installation. The plugin also hosts a local http server for reload calls, while it's not exposed publicaly it will still take a port.
 
-During uninstallation, the plugin will stop and remove the systemd service and make request to github to remove all the created webhooks.
+During uninstallation, the plugin will stop and remove the systemd service and make requests to github to remove all the webhooks created.
 
 ## Getting Started
 First export all the environment varibles that are required.
