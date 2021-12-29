@@ -1,3 +1,4 @@
 #!/bin/bash
 
-/home/dokku/go/bin/go run ./main.go
+declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/github-hook"
+$PLUGIN_PATH/go/bin/go run ./main.go
