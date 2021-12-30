@@ -18,7 +18,7 @@ The servers are written in golang and starts in the background as systemd servic
 During uninstallation, the plugin will stop and remove the systemd service and make requests to github to remove all the webhooks created.
 
 ## Getting Started
-First export all the environment varibles that are required.
+First export all the environment varibles that are required. (Since these variables are setup only for that terminal session, the recommended approach is to set it up all at once.)
 ```
 export LOCAL_CONTROL_PORT = 9000
 export GITHUB_HOOK_PORT = 9090
@@ -69,6 +69,10 @@ Now it will wait for a hook from the repo `https://github.com/bob/bob-api-repo`,
 * Arguments:
 	* `APP_NAME` - Name of the dokku app
 
+#### `deploy-all`
+* Usage: `dokku github-hook:deploy-all`
+* Description: Executes deployment for all dokku apps that have deploy repository defined.
+
 #### `link-create`
 * Usage: `dokku github-hook:link-create HOOK_NAME APP_NAME`
 * Description: Makes a link between a hook and a dokku app, when this hook is triggered the provided app will be deployed.
@@ -82,3 +86,4 @@ Now it will wait for a hook from the repo `https://github.com/bob/bob-api-repo`,
 * Arguments:
 	* `HOOK_NAME` - Hook identifier that is part of a link
 	* `APP_NAME` - Dokku app that is part of a link  
+

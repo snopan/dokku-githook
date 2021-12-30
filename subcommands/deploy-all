@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
+declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/github-hook"
+source "$PLUGIN_PATH/utils"
+
+deployAll() {
+	declare desc="Deploys all dokku app that has a repository defined"
+	declare cmd="github-hook:deploy-all"
+
+	while read deployLine; do
+		declare deployArr=($deployLine)
+		declare app=$1
+		declare repoLink=$2
+		dokku git:sync --build $app $repoLink
+	done < "$PLUGIN_PATH/data/deploys"
+}
+
+checkGithubAuth
+deployAll
