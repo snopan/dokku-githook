@@ -28,7 +28,7 @@ export GITHUB_TOKEN = {github auth token}
 
 Install the plugin.
 ``` 
-dokku plugin:install https://github.com/snopan/dokku-git-hook
+dokku plugin:install https://github.com/snopan/dokku-github-hook
 ```
 
 Create a hook, deploy then link.
