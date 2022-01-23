@@ -4,25 +4,29 @@ set -eo pipefail
 checkGithubHookPort() {
 	if [[ -z $GITHUB_HOOK_PORT ]]
 	then
-		dokku_log_fail "No GITHUB_HOOK_PORT defined!"
+		echo "No GITHUB_HOOK_PORT defined!"
+		exit 1
 	fi
 }
 
 checkLocalControlPort() {
 	if [[ -z $LOCAL_CONTROL_PORT ]]
 	then
-		dokku_log_fail "No LOCAL_CONTROL_PORT defined!"
+		echo "No LOCAL_CONTROL_PORT defined!"
+		exit 1
 	fi	
 }
 
 checkGithubAuth() {
 	if [[ -z $GITHUB_USERNAME ]]
 	then
-		dokku_log_fail "No GITHUB_USERNAME defined!"
+		echo "No GITHUB_USERNAME defined!"
+		exit 1
 	fi
 	if [[ -z $GITHUB_TOKEN ]]
 	then
-		dokku_log_fail "No GITHUB_TOKEN defined!"
+		echo "No GITHUB_TOKEN defined!"
+		exit 1
 	fi
 }
 

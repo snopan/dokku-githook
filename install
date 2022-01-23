@@ -18,7 +18,7 @@ checkLocalControlPort
 checkGithubAuth
 
 # Install golang binaries
-echo "Installing go binaries"
+echo "\nInstalling go binaries"
 installGo
 
 # Install other dependencies
