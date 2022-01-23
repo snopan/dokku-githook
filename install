@@ -18,31 +18,31 @@ checkLocalControlPort
 checkGithubAuth
 
 # Install golang binaries
-echo "\n-----> Installing go binaries"
+echo "\n-----> Installing go binaries" 1>&3
 installGo
 
 # Install other dependencies
-echo "\n-----> Installing ufw"
+echo "\n-----> Installing ufw" 1>&3
 apt -qq update
 apt -qq install ufw -y
 
 # Login to dokku github
-echo "\n-----> Logging into github for dokku"
+echo "\n-----> Logging into github for dokku" 1>&3
 dokku git:auth github.com $GITHUB_USERNAME $GITHUB_TOKEN
 
 # Port foward the github hook port
-echo "\n-----> Port fowarding required ports"
+echo "\n-----> Port fowarding required ports" 1>&3
 ufw allow $GITHUB_HOOK_PORT
 
 # Create all storage files
-echo "\n-----> Creating storage files"
+echo "\n-----> Creating storage files" 1>&3
 mkdir "$PLUGIN_PATH/data"
 echo -n > "$PLUGIN_PATH/data/hooks"
 echo -n > "$PLUGIN_PATH/data/deploys"
 echo -n > "$PLUGIN_PATH/data/links"
 
 # Define the systemd service
-echo "\n-----> Defining systemd service"
+echo "\n-----> Defining systemd service" 1>&3
 read -r -d '' GITHUB_HOOK_SERVICE <<EOF
 [Unit]
 Description=Github hook service that listens for hook request and deploys dokku apps
@@ -70,6 +70,6 @@ EOF
 echo "$GITHUB_HOOK_SERVICE" > /etc/systemd/system/github-hook.service
 
 # Enable the service
-echo "\n-----> Starting systemd service"
+echo "\n----->Starting systemd service" 1>&3
 systemctl daemon-reload
 systemctl start github-hook.service
