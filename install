@@ -5,10 +5,10 @@ source "$PLUGIN_PATH/utils"
 
 installGo() {
 	declare goVersion="1.17.5"
-	wget "https://dl.google.com/go/go$goVersion.linux-amd64.tar.gz"
-	tar -xzf "go$goVersion.linux-amd64.tar.gz"
-	rm "go$goVersion.linux-amd64.tar.gz"
-	mv ./go $PLUGIN_PATH
+	wget "https://dl.google.com/go/go$goVersion.linux-amd64.tar.gz" || exit 21
+	tar -xzf "go$goVersion.linux-amd64.tar.gz" || exit 1
+	rm "go$goVersion.linux-amd64.tar.gz" || exit 1
+	mv ./go $PLUGIN_PATH || exit 1
 }
 
 # Check for defined env before continuing
@@ -20,20 +20,20 @@ checkGithubAuth
 installGo
 
 # Install other dependencies
-apt update
-apt install ufw -y
+apt update || exit 20
+apt install ufw -y || exit 20
 
 # Login to dokku github
-dokku git:auth github.com $GITHUB_USERNAME $GITHUB_TOKEN
+dokku git:auth github.com $GITHUB_USERNAME $GITHUB_TOKEN || exit 30
 
 # Port foward the github hook port
-ufw allow $GITHUB_HOOK_PORT
+ufw allow $GITHUB_HOOK_PORT || exit 23
 
 # Create all storage files
-mkdir "$PLUGIN_PATH/data"
-echo -n > "$PLUGIN_PATH/data/hooks"
-echo -n > "$PLUGIN_PATH/data/deploys"
-echo -n > "$PLUGIN_PATH/data/links"
+mkdir "$PLUGIN_PATH/data" || exit 1
+echo -n > "$PLUGIN_PATH/data/hooks" || exit 1
+echo -n > "$PLUGIN_PATH/data/deploys" || exit 1
+echo -n > "$PLUGIN_PATH/data/links" || exit 1
 
 # Define the systemd service
 read -r -d '' GITHUB_HOOK_SERVICE <<EOF
@@ -60,8 +60,8 @@ WantedBy=multi-user.target
 EOF
 
 # Write the systemd service to file
-echo "$GITHUB_HOOK_SERVICE" > /etc/systemd/system/github-hook.service 
+echo "$GITHUB_HOOK_SERVICE" > /etc/systemd/system/github-hook.service || exit 1
 
 # Enable the service
-systemctl daemon-reload
-systemctl start github-hook.service
+systemctl daemon-reload || exit 24
+systemctl start github-hook.service || exit 24

@@ -3,29 +3,29 @@
 checkGithubHookPort() {
 	if [[ -z $GITHUB_HOOK_PORT ]]
 	then
-		echo "No GITHUB_HOOK_PORT defined!" 1>&2
-		exit 1
+		echo "No GITHUB_HOOK_PORT defined!"
+		exit 10
 	fi
 }
 
 checkLocalControlPort() {
 	if [[ -z $LOCAL_CONTROL_PORT ]]
 	then
-		echo "No LOCAL_CONTROL_PORT defined!" 1>&2
-		exit 1
+		echo "No LOCAL_CONTROL_PORT defined!"
+		exit 11
 	fi	
 }
 
 checkGithubAuth() {
 	if [[ -z $GITHUB_USERNAME ]]
 	then
-		echo "No GITHUB_USERNAME defined!" 1>&2
-		exit 1
+		echo "No GITHUB_USERNAME defined!"
+		exit 12
 	fi
 	if [[ -z $GITHUB_TOKEN ]]
 	then
-		echo "No GITHUB_TOKEN defined!" 1>&2
-		exit 1
+		echo "No GITHUB_TOKEN defined!"
+		exit 13
 	fi
 }
 

@@ -12,7 +12,7 @@ deployAll() {
 		declare deployArr=($deployLine)
 		declare app=$1
 		declare repoLink=$2
-		dokku git:sync --build $app $repoLink
+		dokku git:sync --build $app $repoLink 
 	done < "$PLUGIN_PATH/data/deploys"
 }
 

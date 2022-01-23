@@ -87,3 +87,20 @@ Now it will wait for a hook from the repo `https://github.com/bob/bob-api-repo`,
 	* `HOOK_NAME` - Hook identifier that is part of a link
 	* `APP_NAME` - Dokku app that is part of a link  
 
+## Exit Status Codes
+For easier debugging, all commands would exit with specific exit codes if it's not a common error. If it's just a mv or echo error it would be under exit 1, but for uncommon errors it will follow the table below.
+#### Input errors
+10 - No GITHUB_HOOK_PORT defined
+11 - No LOCAL_CONTROL_PORT defined
+12 - No GITHUB_USERNAME defined
+13 - No GITHUB_TOKEN defined
+
+#### Other command errors
+20 - Apt actions
+21 - Wget downloads
+22 - Tar extraction
+23 - Ufw port fowarding
+24 - Systemd services
+
+#### Dokku errors
+30 - Github auth
