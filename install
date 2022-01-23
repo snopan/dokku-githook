@@ -65,11 +65,12 @@ SyslogIdentifier=github-hook-service
 [Install]
 WantedBy=multi-user.target
 EOF
+echo "read service"
 
 # Write the systemd service to file
 echo "$GITHUB_HOOK_SERVICE" > /etc/systemd/system/github-hook.service
 
 # Enable the service
-echo "----->Starting systemd service"
+echo "-----> Starting systemd service"
 systemctl daemon-reload
 systemctl start github-hook.service
