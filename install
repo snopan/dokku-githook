@@ -5,7 +5,7 @@ source "$PLUGIN_PATH/utils"
 
 installGo() {
 	declare goVersion="1.17.5"
-	wget -q "https://dl.google.com/go/go$goVersion.linux-amd64.tar.gz" || exit 21
+	wget -q --show-progress "https://dl.google.com/go/go$goVersion.linux-amd64.tar.gz" || exit 21
 	tar -xzfv "go$goVersion.linux-amd64.tar.gz" || exit 1
 	rm "go$goVersion.linux-amd64.tar.gz" || exit 1
 	mv ./go $PLUGIN_PATH || exit 1
