@@ -43,7 +43,7 @@ echo -n > "$PLUGIN_PATH/data/links"
 
 # Define the systemd service
 echo "-----> Defining systemd service"
-read -r -d '' GITHUB_HOOK_SERVICE <<EOF
+read -r -d '' GITHUB_HOOK_SERVICE <<EOF || true
 [Unit]
 Description=Github hook service that listens for hook request and deploys dokku apps
 ConditionPathExists=$PLUGIN_PATH/main.go
