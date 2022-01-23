@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -eo pipefall
+set -eo pipefail
 
 declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/github-hook"
 source "$PLUGIN_PATH/utils"

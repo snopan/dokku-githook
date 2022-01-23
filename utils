@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -eo pipefall
+set -eo pipefail
 
 checkGithubHookPort() {
 	if [[ -z $GITHUB_HOOK_PORT ]]
