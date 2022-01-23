@@ -1,31 +1,28 @@
 #!/usr/bin/env bash
+set -eo pipefall
 
 checkGithubHookPort() {
 	if [[ -z $GITHUB_HOOK_PORT ]]
 	then
-		echo "No GITHUB_HOOK_PORT defined!"
-		exit 10
+		dokku_log_fail "No GITHUB_HOOK_PORT defined!"
 	fi
 }
 
 checkLocalControlPort() {
 	if [[ -z $LOCAL_CONTROL_PORT ]]
 	then
-		echo "No LOCAL_CONTROL_PORT defined!"
-		exit 11
+		dokku_log_fail "No LOCAL_CONTROL_PORT defined!"
 	fi	
 }
 
 checkGithubAuth() {
 	if [[ -z $GITHUB_USERNAME ]]
 	then
-		echo "No GITHUB_USERNAME defined!"
-		exit 12
+		dokku_log_fail "No GITHUB_USERNAME defined!"
 	fi
 	if [[ -z $GITHUB_TOKEN ]]
 	then
-		echo "No GITHUB_TOKEN defined!"
-		exit 13
+		dokku_log_fail "No GITHUB_TOKEN defined!"
 	fi
 }
 

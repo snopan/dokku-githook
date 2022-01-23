@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
+set -eo pipefall
 
 declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/github-hook"
 source "$PLUGIN_PATH/utils"
 
 installGo() {
 	declare goVersion="1.17.5"
-	wget -q --show-progress "https://dl.google.com/go/go$goVersion.linux-amd64.tar.gz" || exit 21
-	tar -xzf "go$goVersion.linux-amd64.tar.gz" || exit 1
-	rm "go$goVersion.linux-amd64.tar.gz" || exit 1
-	mv ./go $PLUGIN_PATH || exit 1
+	wget -q --show-progress "https://dl.google.com/go/go$goVersion.linux-amd64.tar.gz"
+	tar -xzf "go$goVersion.linux-amd64.tar.gz"
+	rm "go$goVersion.linux-amd64.tar.gz"
+	mv ./go $PLUGIN_PATH
 }
 
 # Check for defined env before continuing
@@ -27,18 +28,18 @@ apt -qq install ufw -y
 
 # Login to dokku github
 echo "Logging into github for dokku"
-dokku git:auth github.com $GITHUB_USERNAME $GITHUB_TOKEN || exit 30
+dokku git:auth github.com $GITHUB_USERNAME $GITHUB_TOKEN
 
 # Port foward the github hook port
 echo "Port fowarding required ports"
-ufw allow $GITHUB_HOOK_PORT || exit 23
+ufw allow $GITHUB_HOOK_PORT
 
 # Create all storage files
 echo "Creating storage files"
-mkdir "$PLUGIN_PATH/data" || exit 1
-echo -n > "$PLUGIN_PATH/data/hooks" || exit 1
-echo -n > "$PLUGIN_PATH/data/deploys" || exit 1
-echo -n > "$PLUGIN_PATH/data/links" || exit 1
+mkdir "$PLUGIN_PATH/data"
+echo -n > "$PLUGIN_PATH/data/hooks"
+echo -n > "$PLUGIN_PATH/data/deploys"
+echo -n > "$PLUGIN_PATH/data/links"
 
 # Define the systemd service
 echo "Defining systemd service"
@@ -66,9 +67,9 @@ WantedBy=multi-user.target
 EOF
 
 # Write the systemd service to file
-echo "$GITHUB_HOOK_SERVICE" > /etc/systemd/system/github-hook.service || exit 1
+echo "$GITHUB_HOOK_SERVICE" > /etc/systemd/system/github-hook.service
 
 # Enable the service
 echo "Starting systemd service"
-systemctl daemon-reload || exit 24
-systemctl start github-hook.service || exit 24
+systemctl daemon-reload
+systemctl start github-hook.service
