@@ -32,16 +32,16 @@ createLink() {
 			if deployExist $app
 			then			
 				storeLink $hook $app
-				echo "Successfully linked hook \"$hook\" with app \"$app\""
+				echo "=> Successfully linked hook \"$hook\" with app \"$app\"!"
 				reload
 			else
-				echo "err: Given app does not have deployment"
+				echo "err: given app \"$app\" does not have deployment"
 			fi
 		else
-			echo "err: Given hook does not exist"
+			echo "err: given hook \"$hook\" does not exist"
 		fi
 	else
-		echo "err: Given app and hook combination already exist"
+		echo "err: given app \"$app\" and hook \"$hook\" combination already exist"
 	fi
 }
 

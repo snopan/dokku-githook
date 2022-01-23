@@ -31,10 +31,10 @@ createHook() {
 
 			# Once successful, add it to local data
 			storeHook $hook $hookId $repoOwner $repoName
-			echo "Successfully added \"$hook\" as a hook"
+			echo "=> Successfully added \"$hook\" as a hook"
 		fi
 	else
-		echo "err: given hook already exist"
+		echo "err: given hook \"$hook\" already exist"
 	fi
 }
 
@@ -58,17 +58,18 @@ createGithubHook() {
 	if $(echo $response | jq 'has("id")')
 	then
 		hookId=$(echo $response | jq '.id')
+		echo "=> Added hook \"$hook\" to github!"
 		return 0
 	else
 
 		# When request fails, there is always a message field
-		echo "github err: Type $(echo $response | jq '.message')" 
+		echo "err: failed to add hook \"$hook\" to github: $(echo $response | jq '.message')" 
 
 		# Sometimes there would be errors field aswell for certain
 		# errors so we should log that aswell
 		if $(echo $response | jq 'has("errors")')
 		then 
-			echo "github err: $(echo $response | jq '.errors[0].message')"
+			echo "err: failed to add hook \"$hook\" to github:  $(echo $response | jq '.errors[0].message')"
 		fi
 		return 1
 	fi

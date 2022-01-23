@@ -31,10 +31,10 @@ removeHook() {
 		# any links using the given hook
 		deleteHook $hook
 		deleteLinkByHook $hook
-		echo "Successfully removed hook \"$hook\""
+		echo "Successfully removed hook \"$hook\"!"
 		reload
 	else
-		echo "err: Given hook does not exist"
+		echo "err: given hook \"$hook\" does not exist"
 	fi
 }
 

@@ -10,19 +10,20 @@ PLUGIN="$1"
 removeService() {
 	systemctl stop github-hook.service
 	rm /etc/systemd/system/github-hook.service
-	echo "Removed github-hook.service"
+	echo "=> Removed github-hook.service"
 }
 
 removeAllHooks() {
+	echo "=> Removing all hooks defined"
 	while read hookLine; do
 		declare hookArr=($hookLine)
 		declare hookId=${hookArr[1]}
 		declare repoOwner=${hookArr[2]}
 		declare repoName=${hookArr[3]}
+		echo "=> Removing hook $hookId"
 		removeGithubHook $hookId $repoOwner $repoName
-		echo "Removing hook $hookId"
 	done < "$PLUGIN_PATH/data/hooks"
-	echo "Removed all hooks"
+	echo "=> Removed all hooks!"
 }
 
 if [[ "$PLUGIN" = "github-hook" ]]

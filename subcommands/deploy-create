@@ -24,12 +24,12 @@ createDeploy() {
 		if (dokku apps:exists $app)
 		then
 			storeDeploy $app "https://github.com/$repoOwner/$repoName"
-			echo "Successfully added deployment repository for app \"$app\""
+			echo "=> Successfully added deployment repository for app \"$app\"!"
 		else
-			echo "err: Given app is not created yet with dokku"
+			echo "err: given app \"$app\" is not created yet with dokku"
 		fi
 	else
-		echo "err: Given app already has deployment"
+		echo "err: given app \"$app\" already has deployment"
 	fi
 }
 

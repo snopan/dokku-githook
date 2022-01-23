@@ -12,8 +12,10 @@ deployAll() {
 		declare deployArr=($deployLine)
 		declare app=$1
 		declare repoLink=$2
+		echo "=> Deploying app \"$app\" with repository $repoLink"
 		dokku git:sync --build $app $repoLink 
 	done < "$PLUGIN_PATH/data/deploys"
+	echo "=> Finished deploying all apps!"
 }
 
 checkGithubAuth

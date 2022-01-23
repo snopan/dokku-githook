@@ -4,7 +4,7 @@ set -eo pipefail
 checkGithubHookPort() {
 	if [[ -z $GITHUB_HOOK_PORT ]]
 	then
-		echo "ERR: No GITHUB_HOOK_PORT defined!"
+		echo "err: no GITHUB_HOOK_PORT defined!"
 		exit 1
 	fi
 }
@@ -12,7 +12,7 @@ checkGithubHookPort() {
 checkLocalControlPort() {
 	if [[ -z $LOCAL_CONTROL_PORT ]]
 	then
-		echo "ERR: No LOCAL_CONTROL_PORT defined!"
+		echo "err: no LOCAL_CONTROL_PORT defined!"
 		exit 1
 	fi	
 }
@@ -20,18 +20,20 @@ checkLocalControlPort() {
 checkGithubAuth() {
 	if [[ -z $GITHUB_USERNAME ]]
 	then
-		echo "ERR: No GITHUB_USERNAME defined!"
+		echo "err: no GITHUB_USERNAME defined!"
 		exit 1
 	fi
 	if [[ -z $GITHUB_TOKEN ]]
 	then
-		echo "ERR: No GITHUB_TOKEN defined!"
+		echo "err: no GITHUB_TOKEN defined!"
 		exit 1
 	fi
 }
 
 reload() {
 	checkLocalControlPort
+
+	echo "=> Sending reload command to server"
 	curl "localhost:$LOCAL_CONTROL_PORT/update" 	
 }
 
@@ -40,6 +42,7 @@ removeGithubHook() {
 	declare repoOwner=$2
 	declare repoName=$3
 
+	echo "=> Removing hook $hookId from github"
 	# Makes a request to github for removing hook
 	# Running this assumes GITHUB_USERNAME and GITHUB_TOKEN
 	# is available in the environment variables
@@ -52,6 +55,8 @@ removeGithubHook() {
 
 	if [[ -n $response ]]
 	then
-		echo "github err: $(echo $response | jq '.message')"
+		echo "err: failed to remove hook \"$hookId\" from github: $(echo $response | jq '.message')"
+	else
+		echo "=> Removed hook \"$hookId\" from github!"
 	fi
 }
