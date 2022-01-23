@@ -20,8 +20,8 @@ checkGithubAuth
 installGo
 
 # Install other dependencies
-apt -qq update || exit 20
-apt -qq install ufw -y || exit 20
+apt -qq update
+apt -qq install ufw -y
 
 # Login to dokku github
 dokku git:auth github.com $GITHUB_USERNAME $GITHUB_TOKEN || exit 30
