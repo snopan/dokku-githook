@@ -4,7 +4,7 @@ set -eo pipefail
 checkGithubHookPort() {
 	if [[ -z $GITHUB_HOOK_PORT ]]
 	then
-		echo "No GITHUB_HOOK_PORT defined!"
+		echo "\n ERR: No GITHUB_HOOK_PORT defined!"
 		exit 1
 	fi
 }
@@ -12,7 +12,7 @@ checkGithubHookPort() {
 checkLocalControlPort() {
 	if [[ -z $LOCAL_CONTROL_PORT ]]
 	then
-		echo "No LOCAL_CONTROL_PORT defined!"
+		echo "\n ERR: No LOCAL_CONTROL_PORT defined!"
 		exit 1
 	fi	
 }
@@ -20,12 +20,12 @@ checkLocalControlPort() {
 checkGithubAuth() {
 	if [[ -z $GITHUB_USERNAME ]]
 	then
-		echo "No GITHUB_USERNAME defined!"
+		echo "\n ERR: No GITHUB_USERNAME defined!"
 		exit 1
 	fi
 	if [[ -z $GITHUB_TOKEN ]]
 	then
-		echo "No GITHUB_TOKEN defined!"
+		echo "\n ERR: No GITHUB_TOKEN defined!"
 		exit 1
 	fi
 }
