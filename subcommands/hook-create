@@ -35,6 +35,7 @@ createHook() {
 		fi
 	else
 		echo "err: given hook \"$hook\" already exist"
+		exit 1
 	fi
 }
 

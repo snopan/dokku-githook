@@ -30,6 +30,7 @@ removeDeploy() {
 		reload
 	else
 		echo "err: given app \"$app\" has no deployment"
+		exit 1
 	fi
 }
 

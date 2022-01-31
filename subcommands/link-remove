@@ -26,6 +26,7 @@ removeDeploy() {
 		reload
 	else
 		echo "err: given app \"$app\" and hook \"$hook\" combination does not exist"
+		exit 1
 	fi
 }
 

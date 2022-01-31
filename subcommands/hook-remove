@@ -35,6 +35,7 @@ removeHook() {
 		reload
 	else
 		echo "err: given hook \"$hook\" does not exist"
+		exit 1
 	fi
 }
 

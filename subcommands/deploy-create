@@ -27,9 +27,11 @@ createDeploy() {
 			echo "=> Successfully added deployment repository for app \"$app\"!"
 		else
 			echo "err: given app \"$app\" is not created yet with dokku"
+			exit 1
 		fi
 	else
 		echo "err: given app \"$app\" already has deployment"
+		exit 1
 	fi
 }
 

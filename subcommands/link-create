@@ -36,12 +36,15 @@ createLink() {
 				reload
 			else
 				echo "err: given app \"$app\" does not have deployment"
+				exit 1
 			fi
 		else
 			echo "err: given hook \"$hook\" does not exist"
+			exit 1
 		fi
 	else
 		echo "err: given app \"$app\" and hook \"$hook\" combination already exist"
+		exit 1
 	fi
 }
 
