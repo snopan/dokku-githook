@@ -10,8 +10,8 @@ deployAll() {
 
 	while read deployLine; do
 		declare deployArr=($deployLine)
-		declare app=$1
-		declare repoLink=$2
+		declare app=${deployArr[0]}
+		declare repoLink=${deployArr[1]}
 		echo "=> Deploying app \"$app\" with repository $repoLink"
 		dokku git:sync --build $app $repoLink 
 	done < "$PLUGIN_PATH/data/deploys"
