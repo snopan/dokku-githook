@@ -170,7 +170,7 @@ func loadLogger() error {
 }
 
 func logText(message string) {
-	url := os.Getenv("DISCORD_WEBHOOOK_URL")
+	url := os.Getenv("DISCORD_WEBHOOK_URL")
 	if len(url) == 0 {
 		return
 	}
@@ -184,7 +184,7 @@ func logText(message string) {
 }
 
 func logCode(message string) {
-	url := os.Getenv("DISCORD_WEBHOOOK_URL")
+	url := os.Getenv("DISCORD_WEBHOOK_URL")
 	if len(url) == 0 {
 		return
 	}
