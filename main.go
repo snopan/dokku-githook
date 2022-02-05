@@ -9,12 +9,11 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"strings"
 	"sync"
 )
 
-var currPath = getCurrentPath()
+const PLUGIN_PATH = "/var/lib/dokku/plugins/enabled/github-hook"
 
 type LocalData struct {
 	hooks   []string
@@ -22,14 +21,6 @@ type LocalData struct {
 	deploys map[string]string
 
 	mu sync.Mutex
-}
-
-func getCurrentPath() string {
-	ex, err := os.Executable()
-	if err != nil {
-		panic(err)
-	}
-	return filepath.Dir(ex)
 }
 
 func readLocalDataLines(filename string) ([]string, error) {
@@ -176,7 +167,7 @@ func logText(message string) {
 	if len(url) == 0 {
 		return
 	}
-	if _, err := exec.Command(fmt.Sprintf("bash -c source %s/logger.sh ; log %s %s", currPath, url, message)).Output(); err != nil {
+	if _, err := exec.Command(fmt.Sprintf("bash -c source %s/logger.sh ; log %s %s", PLUGIN_PATH, url, message)).Output(); err != nil {
 		log.Printf("error with text logger logging: %s: %s", message, err)
 	}
 }
@@ -186,7 +177,7 @@ func logCode(message string) {
 	if len(url) == 0 {
 		return
 	}
-	if _, err := exec.Command(fmt.Sprintf("bash -c source %s/logger.sh ; echo -n %s | logCode %s", currPath, message, url)).Output(); err != nil {
+	if _, err := exec.Command(fmt.Sprintf("bash -c source %s/logger.sh ; echo -n %s | logCode %s", PLUGIN_PATH, message, url)).Output(); err != nil {
 		log.Printf("error with code logger logging: %s: %s", message, err)
 	}
 }
