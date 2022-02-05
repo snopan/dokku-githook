@@ -135,6 +135,7 @@ func (ld *LocalData) loadAll() error {
 
 func deployApp(app string, repository string) error {
 	logText(fmt.Sprintf("Deploying repostitory '%s' to app '%s'", repository, app))
+	log.Printf("Deploying repostitory '%s' to app '%s'", repository, app)
 	cmd := exec.Command("dokku", "git:sync", "--build", app, repository)
 
 	// Write the stdout and stderr output of the command to separate buffers
