@@ -228,32 +228,29 @@ func runControlServer(ld *LocalData) {
 
 	controlServer.HandleFunc("/update", func(w http.ResponseWriter, r *http.Request) {
 		// Load all the local data
-		if err := ld.loadAll(); err != nil {
-			log.Fatalf("error loading all local data: %s", err)
-			w.WriteHeader(400)
-		} else {
-			log.Print("Finished loading all local data")
-			w.WriteHeader(200)
-		}
+		go func() {
+			if err := ld.loadAll(); err != nil {
+				log.Fatalf("error loading all local data: %s", err)
+			} else {
+				log.Print("Finished loading all local data")
+			}
+		}()
+		w.WriteHeader(200)
 	})
 
 	controlServer.HandleFunc("/deploy-all", func(w http.ResponseWriter, r *http.Request) {
 		log.Print("Deploying all apps")
-		hadErrored := false
 
 		// Deploy all apps with set repository
-		for app, repository := range ld.deploys {
-			log.Printf("Deploying repostitory '%s' to app '%s'", repository, app)
-			if err := deployApp(app, repository); err != nil {
-				log.Printf("error deploying app %s: %s", app, err)
-				hadErrored = true
+		go func() {
+			for app, repository := range ld.deploys {
+				log.Printf("Deploying repostitory '%s' to app '%s'", repository, app)
+				if err := deployApp(app, repository); err != nil {
+					log.Printf("error deploying app %s: %s", app, err)
+				}
 			}
-		}
-		if hadErrored {
-			w.WriteHeader(400)
-		} else {
-			w.WriteHeader(200)
-		}
+		}()
+		w.WriteHeader(200)
 	})
 
 	log.Printf("Starting control server on port %s", os.Getenv("LOCAL_CONTROL_PORT"))
