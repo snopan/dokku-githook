@@ -166,7 +166,7 @@ func logText(message string) {
 		return
 	}
 	if _, err := exec.Command(fmt.Sprintf("bash", "-c", "source ./logger.sh ; log %s %s", url, message)).Output(); err != nil {
-		log.Printf("error with text logger logging: %s", message)
+		log.Printf("error with text logger logging: %s: %s", message, err)
 	}
 }
 
@@ -176,7 +176,7 @@ func logCode(message string) {
 		return
 	}
 	if _, err := exec.Command(fmt.Sprintf("bash", "-c", "source ./logger.sh ; echo -n %s | logCode %s", message, url)).Output(); err != nil {
-		log.Printf("error with code logger logging: %s", message)
+		log.Printf("error with code logger logging: %s: %s", message, err)
 	}
 }
 
