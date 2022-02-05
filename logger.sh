@@ -7,7 +7,7 @@ log() {
 
 logCode() {
     local url="$1"
-    local message="$2"
+    local message=$(cat)
     local parsedNewLineMessage=${message//$'\n'/\\n}
     local jsonMessage=$(echo $parsedNewLineMessage | sed 's/"/\\"/g')
     echo $jsonMessage

@@ -192,7 +192,7 @@ func logCode(message string) {
 		log.Print(err)
 		return
 	}
-	if _, err := exec.Command(fmt.Sprintf("logCode %s %s", url, message)).Output(); err != nil {
+	if _, err := exec.Command(fmt.Sprintf("echo -n %s | logCode %s", message, url)).Output(); err != nil {
 		log.Printf("error with code logger logging: %s", message)
 	}
 }
