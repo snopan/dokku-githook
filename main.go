@@ -13,17 +13,7 @@ import (
 	"sync"
 )
 
-const (
-	PLUGIN_NAME      = "github-hook"
-	TEXT_LOGGER_FILE = "text-logger.sh"
-	CODE_LOGGER_FILE = "code-logger.sh"
-	LOG_FUNCTION     = "log"
-)
-
-var (
-	textLogger = false
-	codeLogger = false
-)
+const PLUGIN_NAME = "github-hook"
 
 type LocalData struct {
 	hooks   []string
@@ -172,31 +162,38 @@ func deployApp(app string, repository string) error {
 	}
 }
 
-func logMessage(message string) {
-	if _, err := exec.Command(fmt.Sprintf("%s %s", LOG_FUNCTION, message)).Output(); err != nil {
-		log.Printf("error with text logger when logging: %s", message)
+func loadLogger() error {
+	if _, err := exec.Command("source ./logger.sh").Output(); err != nil {
+		return fmt.Errorf("error loading logger")
 	}
+	return nil
 }
 
 func logText(message string) {
-	if textLogger {
-		if _, err := exec.Command(fmt.Sprintf("source ./%s", TEXT_LOGGER_FILE)).Output(); err != nil {
-			log.Printf("error reading text logger")
-			return
-		}
-		logMessage(message)
+	url := os.Getenv("DISCORD_WEBHOOOK_URL")
+	if len(url) == 0 {
+		return
+	}
+	if err := loadLogger(); err != nil {
+		log.Print(err)
+		return
+	}
+	if _, err := exec.Command(fmt.Sprintf("log %s %s", url, message)).Output(); err != nil {
+		log.Printf("error with text logger logging: %s", message)
 	}
 }
 
 func logCode(message string) {
-	if codeLogger {
-		if _, err := exec.Command(fmt.Sprintf("source ./%s", CODE_LOGGER_FILE)).Output(); err != nil {
-			log.Printf("error reading text logger")
-			return
-		}
-		logMessage(message)
-	} else if textLogger {
-		logText(message)
+	url := os.Getenv("DISCORD_WEBHOOOK_URL")
+	if len(url) == 0 {
+		return
+	}
+	if err := loadLogger(); err != nil {
+		log.Print(err)
+		return
+	}
+	if _, err := exec.Command(fmt.Sprintf("logCode %s %s", url, message)).Output(); err != nil {
+		log.Printf("error with code logger logging: %s", message)
 	}
 }
 
@@ -253,29 +250,6 @@ func runControlServer(ld *LocalData) {
 		} else {
 			w.WriteHeader(200)
 		}
-	})
-
-	controlServer.HandleFunc("/text-logger", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case http.MethodPost:
-			textLogger = true
-			break
-		case http.MethodDelete:
-			textLogger = false
-			break
-		}
-		w.WriteHeader(200)
-	})
-	controlServer.HandleFunc("/code-logger", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case http.MethodPost:
-			codeLogger = true
-			break
-		case http.MethodDelete:
-			codeLogger = false
-			break
-		}
-		w.WriteHeader(200)
 	})
 
 	log.Printf("Starting control server on port %s", os.Getenv("LOCAL_CONTROL_PORT"))
