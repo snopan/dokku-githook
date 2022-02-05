@@ -7,7 +7,7 @@ source "$PLUGIN_PATH/utils"
 deployAll() {
 	checkLocalControlPort
 
-	echo "=> Sending reload command to server"
+	echo "=> Sending deploy all command to server"
 	curl "localhost:$LOCAL_CONTROL_PORT/deploy-all" 	
 }
 

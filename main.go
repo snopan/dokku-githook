@@ -232,16 +232,27 @@ func runControlServer(ld *LocalData) {
 		// Load all the local data
 		if err := ld.loadAll(); err != nil {
 			log.Fatalf("error loading all local data: %s", err)
+			w.WriteHeader(400)
 		}
-		log.Print("Finished loading all local data")
+		else {
+			log.Print("Finished loading all local data")
+			w.WriteHeader(200)
+		}
 	})
 
 	controlServer.HandleFunc("/deploy-all", func(w http.ResponseWriter, r *http.Request) {
 		// Deploy all apps with set repository
+		var hadErrored = false
 		for app, repository := range ld.deploys {
 			if err := deployApp(app, repository); err != nil {
 				log.Printf("error deploying app %s: %s", app, err)
+				hadErrored = true
 			}
+		}
+		if hadErrored {
+			w.WriteHeader(400)
+		} else {
+			w.WriteHeader(200)
 		}
 	})
 
@@ -254,6 +265,7 @@ func runControlServer(ld *LocalData) {
 			textLogger = false
 			break
 		}
+		w.WriteHeader(200)
 	})
 	controlServer.HandleFunc("/code-logger", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
@@ -264,6 +276,7 @@ func runControlServer(ld *LocalData) {
 			codeLogger = false
 			break
 		}
+		w.WriteHeader(200)
 	})
 
 	log.Printf("Starting control server on port %s", os.Getenv("LOCAL_CONTROL_PORT"))
