@@ -233,8 +233,7 @@ func runControlServer(ld *LocalData) {
 		if err := ld.loadAll(); err != nil {
 			log.Fatalf("error loading all local data: %s", err)
 			w.WriteHeader(400)
-		}
-		else {
+		} else {
 			log.Print("Finished loading all local data")
 			w.WriteHeader(200)
 		}
@@ -242,7 +241,7 @@ func runControlServer(ld *LocalData) {
 
 	controlServer.HandleFunc("/deploy-all", func(w http.ResponseWriter, r *http.Request) {
 		// Deploy all apps with set repository
-		var hadErrored = false
+		hadErrored := false
 		for app, repository := range ld.deploys {
 			if err := deployApp(app, repository); err != nil {
 				log.Printf("error deploying app %s: %s", app, err)
