@@ -13,8 +13,6 @@ import (
 	"sync"
 )
 
-const PLUGIN_NAME = "github-hook"
-
 type LocalData struct {
 	hooks   []string
 	links   map[string][]string
@@ -162,23 +160,12 @@ func deployApp(app string, repository string) error {
 	}
 }
 
-func loadLogger() error {
-	if _, err := exec.Command("source ./logger.sh").Output(); err != nil {
-		return fmt.Errorf("error loading logger")
-	}
-	return nil
-}
-
 func logText(message string) {
 	url := os.Getenv("DISCORD_WEBHOOK_URL")
 	if len(url) == 0 {
 		return
 	}
-	if err := loadLogger(); err != nil {
-		log.Print(err)
-		return
-	}
-	if _, err := exec.Command(fmt.Sprintf("log %s %s", url, message)).Output(); err != nil {
+	if _, err := exec.Command(fmt.Sprintf("bash", "-c", "source ./logger.sh;", "log %s %s", url, message)).Output(); err != nil {
 		log.Printf("error with text logger logging: %s", message)
 	}
 }
@@ -188,11 +175,7 @@ func logCode(message string) {
 	if len(url) == 0 {
 		return
 	}
-	if err := loadLogger(); err != nil {
-		log.Print(err)
-		return
-	}
-	if _, err := exec.Command(fmt.Sprintf("echo -n %s | logCode %s", message, url)).Output(); err != nil {
+	if _, err := exec.Command(fmt.Sprintf("bash", "-c", "source ./logger.sh;", "echo -n %s | logCode %s", message, url)).Output(); err != nil {
 		log.Printf("error with code logger logging: %s", message)
 	}
 }
