@@ -13,7 +13,17 @@ import (
 	"sync"
 )
 
-const PLUGIN_NAME = "github-hook"
+const (
+	PLUGIN_NAME      = "github-hook"
+	TEXT_LOGGER_FILE = "text-logger.sh"
+	CODE_LOGGER_FILE = "code-logger.sh"
+	LOG_FUNCTION     = "log"
+)
+
+var (
+	textLogger = false
+	codeLogger = false
+)
 
 type LocalData struct {
 	hooks   []string
@@ -107,31 +117,6 @@ func readLocalDeploysData() (map[string]string, error) {
 	return deploys, nil
 }
 
-func deployApp(app string, repository string) error {
-	cmd := exec.Command("dokku", "git:sync", "--build", app, repository)
-
-	// Write the stdout and stderr output of the command to separate buffers
-	var stdoutBuff, stderrBuff bytes.Buffer
-	cmd.Stdout = io.MultiWriter(os.Stdout, &stdoutBuff)
-	cmd.Stderr = io.MultiWriter(os.Stderr, &stderrBuff)
-
-	// Start the command
-	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("error running command: %w", err)
-	}
-
-	// Read the data from stdout and stderr
-	_, errStr := stdoutBuff.String(), stderrBuff.String()
-
-	// Check if stderr exists
-	if len(errStr) == 0 {
-		log.Printf("App %s has been deployed", app)
-		return nil
-	} else {
-		return fmt.Errorf("error executing dokku deploy: %s", errStr)
-	}
-}
-
 func (ld *LocalData) loadAll() error {
 	defer ld.mu.Unlock()
 	ld.mu.Lock()
@@ -158,6 +143,63 @@ func (ld *LocalData) loadAll() error {
 	return nil
 }
 
+func deployApp(app string, repository string) error {
+	logText(fmt.Sprintf("Deploying repostitory '%s' to app '%s'", repository, app))
+	cmd := exec.Command("dokku", "git:sync", "--build", app, repository)
+
+	// Write the stdout and stderr output of the command to separate buffers
+	var stdoutBuff, stderrBuff bytes.Buffer
+	cmd.Stdout = io.MultiWriter(os.Stdout, &stdoutBuff)
+	cmd.Stderr = io.MultiWriter(os.Stderr, &stderrBuff)
+
+	// Start the command
+	if err := cmd.Run(); err != nil {
+		return fmt.Errorf("error running command: %w", err)
+	}
+
+	// Read the data from stdout and stderr
+	outStr, errStr := stdoutBuff.String(), stderrBuff.String()
+	logCode(outStr)
+
+	// Check if stderr exists
+	if len(errStr) == 0 {
+		log.Printf("App %s has been deployed", app)
+		return nil
+	} else {
+		logText("error failed to deploy")
+		logCode(errStr)
+		return fmt.Errorf("error executing dokku deploy: %s", errStr)
+	}
+}
+
+func logMessage(message string) {
+	if _, err := exec.Command(fmt.Sprintf("%s %s", LOG_FUNCTION, message)).Output(); err != nil {
+		log.Printf("error with text logger when logging: %s", message)
+	}
+}
+
+func logText(message string) {
+	if textLogger {
+		if _, err := exec.Command(fmt.Sprintf("source ./%s", TEXT_LOGGER_FILE)).Output(); err != nil {
+			log.Printf("error reading text logger")
+			return
+		}
+		logMessage(message)
+	}
+}
+
+func logCode(message string) {
+	if codeLogger {
+		if _, err := exec.Command(fmt.Sprintf("source ./%s", CODE_LOGGER_FILE)).Output(); err != nil {
+			log.Printf("error reading text logger")
+			return
+		}
+		logMessage(message)
+	} else if textLogger {
+		logText(message)
+	}
+}
+
 func runHookServer(ld *LocalData) {
 	var hookServer http.ServeMux
 
@@ -168,7 +210,7 @@ func runHookServer(ld *LocalData) {
 		if appArr, ok := ld.links[hook]; ok {
 			log.Printf(`Hook "%s" was triggered`, hook)
 
-			// Then deploy each app
+			// Then deploy each app that is linked to the hook
 			for _, app := range appArr {
 				if err := deployApp(app, ld.deploys[app]); err != nil {
 					log.Printf("error deploying app %s: %s", app, err)
@@ -192,6 +234,36 @@ func runControlServer(ld *LocalData) {
 			log.Fatalf("error loading all local data: %s", err)
 		}
 		log.Print("Finished loading all local data")
+	})
+
+	controlServer.HandleFunc("/deploy-all", func(w http.ResponseWriter, r *http.Request) {
+		// Deploy all apps with set repository
+		for app, repository := range ld.deploys {
+			if err := deployApp(app, repository); err != nil {
+				log.Printf("error deploying app %s: %s", app, err)
+			}
+		}
+	})
+
+	controlServer.HandleFunc("/text-logger", func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodPost:
+			textLogger = true
+			break
+		case http.MethodDelete:
+			textLogger = false
+			break
+		}
+	})
+	controlServer.HandleFunc("/code-logger", func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodPost:
+			codeLogger = true
+			break
+		case http.MethodDelete:
+			codeLogger = false
+			break
+		}
 	})
 
 	log.Printf("Starting control server on port %s", os.Getenv("LOCAL_CONTROL_PORT"))

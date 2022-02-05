@@ -5,18 +5,10 @@ declare PLUGIN_PATH="$PLUGIN_AVAILABLE_PATH/github-hook"
 source "$PLUGIN_PATH/utils"
 
 deployAll() {
-	declare desc="Deploys all dokku app that has a repository defined"
-	declare cmd="github-hook:deploy-all"
+	checkLocalControlPort
 
-	while read deployLine; do
-		declare deployArr=($deployLine)
-		declare app=${deployArr[0]}
-		declare repoLink=${deployArr[1]}
-		echo "=> Deploying app \"$app\" with repository $repoLink"
-		dokku git:sync --build $app $repoLink 
-	done < "$PLUGIN_PATH/data/deploys"
-	echo "=> Finished deploying all apps!"
+	echo "=> Sending reload command to server"
+	curl "localhost:$LOCAL_CONTROL_PORT/deploy-all" 	
 }
 
-checkGithubAuth
 deployAll
